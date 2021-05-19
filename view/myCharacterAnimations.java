@@ -10,32 +10,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 public class myCharacterAnimations {
-	
-/*case KeyEvent.VK_LEFT:
-	panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
-	break;
 
-case KeyEvent.VK_RIGHT:
-	panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
-	break;
-
-/*case KeyEvent.VK_UP:
-	panel.updateAnimation(myCharacterAnimations.JUMP);		// da implementare in futuro
-	break;
-
-case KeyEvent.VK_DOWN:
-	panel.updateAnimation(myCharacterAnimations.RUN);
-	break;
-
-case KeyEvent.VK_SPACE:
-	panel.updateAnimation(myCharacterAnimations.ATTACK);
-	break;
-
-default:
-	panel.updateAnimation(myCharacterAnimations.IDLE);
-	break;
-}*/
-	
 	
 	public static final int WALK_LEFT = 1;
 	public static final int WALK_RIGHT = 2;
@@ -78,7 +53,6 @@ default:
 		if (currentAnimation == null) {
 			return;
 		}
-		System.out.println(currentAnimation.update() + " " + isRight);
 		
 		if(currentAnimation.update()) {
 			return;

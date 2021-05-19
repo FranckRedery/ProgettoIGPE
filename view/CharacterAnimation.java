@@ -19,10 +19,8 @@ public class CharacterAnimation {
 	
 	public boolean update() {
 		index++;
-		System.out.println(index + " " +images.size());
 		if(index >= images.size()) { 
 			index = 0;
-			System.out.println("ritorna falso");
 			return false;
 		}
 		this.currentImage = images.get(index);
