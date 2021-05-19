@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import application.view.myCharacterAnimations;
+import application.model.MyCharacter;
 import application.view.GraphicPanel;
 
 public class AnimationController extends KeyAdapter {
@@ -19,11 +20,13 @@ public class AnimationController extends KeyAdapter {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
 			myCharacterAnimations.isRight = false;
+			MyCharacter.x -= MyCharacter.speed;
 			panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
 			break;
 
 		case KeyEvent.VK_RIGHT:
 			myCharacterAnimations.isRight = true;
+			MyCharacter.x += MyCharacter.speed;
 			panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
 			break;
 
