@@ -1,16 +1,25 @@
 package application.model;
 
+import java.awt.Rectangle;
+
+import application.Settings;
+
 public class MyCharacter {
 
-	public static int x = 100;
-	public static int y = 200;
-	public static int speed = 5; 
+	public   int x;
+	public   int y;
+	public  int speed; 
+	public  int life;
 	
-	public int getX() {
-		return x;
+	public MyCharacter() {
+		x = 100;
+		y = 500;
+		speed = 5;
+		life = 5;
 	}
 	
-	public int getY() {
-		return y;
-	}	
+	public  Rectangle getRectangle() {
+		Rectangle r = new Rectangle(x, y, 40, 80);
+		return r;
+	}
 }

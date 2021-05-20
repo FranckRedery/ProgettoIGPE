@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import application.view.myCharacterAnimations;
+import application.model.Game;
 import application.model.MyCharacter;
 import application.view.GraphicPanel;
 
@@ -19,14 +20,13 @@ public class AnimationController extends KeyAdapter {
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
-			myCharacterAnimations.isRight = false;
-			MyCharacter.x -= MyCharacter.speed;
-			panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
+				Game.getInstance().moveLeft();
+				panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
+			
 			break;
 
 		case KeyEvent.VK_RIGHT:
-			myCharacterAnimations.isRight = true;
-			MyCharacter.x += MyCharacter.speed;
+			Game.getInstance().moveRight();
 			panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
 			break;
 
@@ -45,6 +45,10 @@ public class AnimationController extends KeyAdapter {
 			else {
 				panel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
 			}
+			break;
+			
+		case KeyEvent.VK_ESCAPE:
+			System.exit(0);
 			break;
 
 		default:
