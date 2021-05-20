@@ -17,9 +17,9 @@ public class myCharacterAnimations {
 	public static final int ATTACK_LEFT = 3;
 	public static final int ATTACK_RIGHT = 4;
 	public static final int IDLE_LEFT = 5;
-	//public static final int RUN = 3;
-	//public static final int HIT = 4;
 	public static final int IDLE_RIGHT = 6;
+	public static final int JUMP_LEFT = 7;
+	public static final int JUMP_RIGHT = 8;
 	public static boolean isRight = true;
 	
 	private HashMap<Integer, CharacterAnimation> animations;
@@ -32,7 +32,9 @@ public class myCharacterAnimations {
 		animations.put(ATTACK_LEFT, new CharacterAnimation(getResources("myCharacterLeft/attack")));
 		animations.put(ATTACK_RIGHT, new CharacterAnimation(getResources("myCharacterRight/attack")));
 		animations.put(IDLE_LEFT, new CharacterAnimation(getResources("myCharacterLeft/Idle")));
-		animations.put(IDLE_RIGHT, new CharacterAnimation(getResources("myCharacterRight/Idle")));		
+		animations.put(IDLE_RIGHT, new CharacterAnimation(getResources("myCharacterRight/Idle")));
+		animations.put(JUMP_LEFT, new CharacterAnimation(getResources("myCharacterLeft/jump")));
+		animations.put(JUMP_RIGHT, new CharacterAnimation(getResources("myCharacterRight/jump")));
 		currentAnimation = animations.get(IDLE_RIGHT);		
 	}
 
