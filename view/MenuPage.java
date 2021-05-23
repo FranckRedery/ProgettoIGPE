@@ -38,14 +38,13 @@ public class MenuPage extends JPanel {
 		
 		try {
 			background = ImageIO.read(new File(getClass().getResource("/application/resources/menu/Menubackground.jpg/").getPath()));
-			playButton = new ImageIcon(getClass().getResource("/application/resources/menu/playDefault.jpg/").getPath());
-			settingsButton = new ImageIcon(getClass().getResource("/application/resources/menu/settingsDefault.jpg/").getPath());
-			quitButton = new ImageIcon(getClass().getResource("/application/resources/menu/quitDefault.jpg/").getPath());
 		} catch (IOException e) {
 			System.out.println("Can't load menu images");
 		}
 		
-		
+		playButton = new ImageIcon(getClass().getResource("/application/resources/menu/playDefault.jpg/").getPath());
+		settingsButton = new ImageIcon(getClass().getResource("/application/resources/menu/settingsDefault.jpg/").getPath());
+		quitButton = new ImageIcon(getClass().getResource("/application/resources/menu/quitDefault.jpg/").getPath());
 		play = new JButton(playButton);
 		play.setBounds(550,200,400,100);
 		settings = new JButton(settingsButton);

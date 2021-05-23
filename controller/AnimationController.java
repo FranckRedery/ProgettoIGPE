@@ -61,7 +61,7 @@ public class AnimationController extends KeyAdapter {
 			break;
 			
 			
-		case KeyEvent.VK_SPACE:
+		case KeyEvent.VK_A:
 			if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isActionInProgress()) {
 				Game.getInstance().setActionInProgress(true);
 				if(myCharacterAnimations.isRight) {

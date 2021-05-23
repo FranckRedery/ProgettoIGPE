@@ -13,10 +13,12 @@ import application.Main;
 import application.Settings;
 import application.view.GraphicPanel;
 import application.view.MenuPage;
+import application.view.SettingsPage;
 
 public class MenuPageController implements MouseListener {
 
 	private MenuPage menu = new MenuPage();
+	public static JFrame settingsFrame;
 	
 	public MenuPageController(MenuPage p) {
 		menu = p;
@@ -27,7 +29,7 @@ public class MenuPageController implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.getSource().equals(menu.getPlay())) {
+		if(e.getSource() == menu.getPlay()) {
 			
 			Main.start.dispose();
 			JFrame f = new JFrame("Gioco");
@@ -45,29 +47,32 @@ public class MenuPageController implements MouseListener {
 			f.setVisible(true);
 		}
 		else if(e.getSource() == menu.getSettings()) {
-			menu.getSettings().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/settingsMouseEntered.jpg/").getPath()));
+			
+			Main.start.setVisible(false);
+			settingsFrame = new JFrame("Settings");
+			
+			SettingsPage settingsPage = new SettingsPage();
+			SettingsPageController control = new SettingsPageController(settingsPage);
+			settingsPage.addMouseListener(control);
+			settingsPage.setFocusable(true);
+			
+			settingsFrame.add(settingsPage);
+			settingsFrame.setSize(Settings.WINDOW_SIZE,Settings.WINDOW_SIZE);
+			settingsFrame.setLocationRelativeTo(null);
+			settingsFrame.setUndecorated(true);
+			settingsFrame.setVisible(true);
+			
+			
 		}
 		else if(e.getSource() == menu.getQuit()) {
 			System.exit(0);
 		}
 		
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource().equals(menu.getPlay())) {
+		if(e.getSource() == menu.getPlay()) {
 			menu.getPlay().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/playMouseEntered.jpg/").getPath()));
 		}
 		else if(e.getSource() == menu.getSettings()) {
@@ -81,7 +86,7 @@ public class MenuPageController implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if(e.getSource().equals(menu.getPlay())) {
+		if(e.getSource() == menu.getPlay()) {
 			menu.getPlay().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/playDefault.jpg/").getPath()));
 		}
 		else if(e.getSource() == menu.getSettings()) {
@@ -92,5 +97,16 @@ public class MenuPageController implements MouseListener {
 		}
 	}
 	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
