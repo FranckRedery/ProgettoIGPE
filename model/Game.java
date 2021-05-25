@@ -25,6 +25,7 @@ public class Game {
 		return game;
 	}
 	
+	// per il mio gioco probabilmente meglio non creare una mappa da file txt e farla direttamente nel paintcomponent
 	public void creamappa() {
 		
 	}
@@ -81,7 +82,7 @@ public class Game {
 		return myCharacter;
 	}
 	
-	public void attaccato() {
+	public void attaccato() {	// TO DO
 		Rectangle rettangolo = myCharacter.getRectangle();
 		if(rettangolo.intersects(rettangolo)) {
 			myCharacter.life--;

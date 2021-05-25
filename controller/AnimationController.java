@@ -78,7 +78,7 @@ public class AnimationController extends KeyAdapter {
 			break;
 
 		default:
-			if(myCharacterAnimations.isRight ) {
+			if(myCharacterAnimations.isRight) {
 				panel.updateAnimation(myCharacterAnimations.IDLE_RIGHT);
 			}
 			else {
