@@ -14,7 +14,7 @@ public class MyCharacter {
 	
 	public MyCharacter() {
 		x = 100;
-		y = 500;
+		y = 800;
 		speed = 5;
 		life = 5;
 	}

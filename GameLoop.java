@@ -16,7 +16,6 @@ public class GameLoop extends Thread{
 		while(true) {
 			try {
 				controller.update();
-				//System.out.println(System.currentTimeMillis()-avvio);
 				Thread.sleep(30);
 			} catch (InterruptedException e) {
 				return;

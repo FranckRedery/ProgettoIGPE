@@ -12,6 +12,8 @@ public class Game {
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
 	private boolean actionInProgress = false;
+	private int kills = 0;
+	private int round = 1;
 	
 	private Game() {
 		myCharacter = new MyCharacter();
@@ -23,11 +25,6 @@ public class Game {
 			game = new Game();
 		}
 		return game;
-	}
-	
-	// per il mio gioco probabilmente meglio non creare una mappa da file txt e farla direttamente nel paintcomponent
-	public void creamappa() {
-		
 	}
 	
 	
@@ -111,5 +108,21 @@ public class Game {
 
 	public void setJumpRight(boolean jumpRight) {
 		JumpRight = jumpRight;
+	}
+
+	public int getKills() {
+		return kills;
+	}
+
+	public void setKills(int kills) {
+		this.kills = kills;
+	}
+
+	public int getRound() {
+		return round;
+	}
+
+	public void setRound(int round) {
+		this.round = round;
 	}
 }
