@@ -1,22 +1,27 @@
 package application.model;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import application.Settings;
+import application.view.GraphicPanel;
 import application.view.myCharacterAnimations;
 
 public class Game {
 
 	private MyCharacter myCharacter;
+	public static ArrayList<smallDragon> smalldragons;
 	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
 	private boolean actionInProgress = false;
 	private int kills = 0;
 	private int round = 1;
+	private int liveEnemies = 0;
 	
 	private Game() {
 		myCharacter = new MyCharacter();
+		smalldragons = new ArrayList<smallDragon>();
 		
 	}
 	
@@ -27,11 +32,40 @@ public class Game {
 		return game;
 	}
 	
-	
 	public void moveLeft() {
 		myCharacterAnimations.isRight = false;
 		if((myCharacter.x - myCharacter.speed >= 0)) {
 			myCharacter.x -= myCharacter.speed;
+		}
+	}
+	
+	public void spawnSmallDragonLeft() {
+		smallDragon drake = new smallDragon(true);
+		liveEnemies = getLiveEnemies() + 1;
+		smalldragons.add(drake);
+	}
+	
+	public void spawnSmallDragonRight() {
+		smallDragon drake = new smallDragon(false);
+		liveEnemies = getLiveEnemies() + 1;
+		smalldragons.add(drake);
+	}
+	
+	
+	public void smallDragonsmove() {
+		for(int i = 0 ; i< smalldragons.size();++i) {
+			if(myCharacter.x < smalldragons.get(i).x ) {
+				smalldragons.get(i).isRight = false;
+			}
+			else {
+				smalldragons.get(i).isRight = true;
+			}
+			if(smalldragons.get(i).isRight) {
+				smalldragons.get(i).x += smalldragons.get(i).speed;
+			}
+			else {
+				smalldragons.get(i).x -= smalldragons.get(i).speed;
+			}
 		}
 	}
 	
@@ -79,13 +113,38 @@ public class Game {
 		return myCharacter;
 	}
 	
-	public void attaccato() {	// TO DO
-		Rectangle rettangolo = myCharacter.getRectangle();
-		if(rettangolo.intersects(rettangolo)) {
-			myCharacter.life--;
+	public boolean myCharAttacked() {	// TO DO
+		for(int i = 0; i<smalldragons.size();++i) {
+			if(myCharacter.getRectangle().intersects(smalldragons.get(i).getRectangle())) {
+				myCharacter.life--;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void myCharAttackRight() {
+		for(int i =0 ; i<smalldragons.size();++i) {
+			if(myCharacter.attackRight().intersects(smalldragons.get(i).getRectangle())) {
+				smalldragons.remove(i);
+				GraphicPanel.smallDragonanimations.remove(i);
+				liveEnemies--;
+				kills++;
+			}
 		}
 	}
 
+	public void myCharAttackLeft() {
+		for(int i = 0; i<smalldragons.size();++i) {
+			if(myCharacter.attackLeft().intersects(smalldragons.get(i).getRectangle())) {
+				smalldragons.remove(i);
+				GraphicPanel.smallDragonanimations.remove(i);
+				liveEnemies--;
+				kills++;
+			}
+		}
+	}
+	
 	public boolean isActionInProgress() {
 		return actionInProgress;
 	}
@@ -124,5 +183,9 @@ public class Game {
 
 	public void setRound(int round) {
 		this.round = round;
+	}
+
+	public int getLiveEnemies() {
+		return liveEnemies;
 	}
 }

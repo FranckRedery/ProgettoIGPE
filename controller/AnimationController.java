@@ -37,13 +37,6 @@ public class AnimationController extends KeyAdapter {
 			}		
 			break;
 
-		/*case KeyEvent.VK_UP:
-			panel.updateAnimation(myCharacterAnimations.JUMP);		// da implementare in futuro
-			break;
-
-		case KeyEvent.VK_DOWN:
-			panel.updateAnimation(myCharacterAnimations.RUN);
-			break;*/
 		case KeyEvent.VK_D : 
 			if(!Game.getInstance().isActionInProgress()) {
 				Game.getInstance().setActionInProgress(true);
@@ -66,9 +59,11 @@ public class AnimationController extends KeyAdapter {
 				Game.getInstance().setActionInProgress(true);
 				if(myCharacterAnimations.isRight) {
 					panel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
+					Game.getInstance().myCharAttackRight();
 				}
 				else {
 					panel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
+					Game.getInstance().myCharAttackLeft();
 				}
 			}
 			break;

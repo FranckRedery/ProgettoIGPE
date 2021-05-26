@@ -13,16 +13,25 @@ public class MyCharacter {
 	
 	
 	public MyCharacter() {
-		x = 100;
+		x = 400;
 		y = 800;
-		speed = 5;
+		speed = 10;
 		life = 5;
 	}
 	
 	
 	public  Rectangle getRectangle() {
-		Rectangle r = new Rectangle(x, y, 40, 80);
+		Rectangle r = new Rectangle(x, y, 40, 40);
 		return r;
 	}
 	
+	public Rectangle attackRight() {
+		Rectangle r = new Rectangle(x+30,y,40,40);
+		return r;
+	}
+	
+	public Rectangle attackLeft() {
+		Rectangle r = new Rectangle(x-30,y,40,40);
+		return r;
+	}
 }
