@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import application.Settings;
 import application.view.GraphicPanel;
 import application.view.myCharacterAnimations;
+import application.view.smallDragonAnimations;
+import application.view.smallDragonAnimation;
 
 public class Game {
 
 	private MyCharacter myCharacter;
 	public static ArrayList<smallDragon> smalldragons;
+	public static ArrayList<fireAttack> fireAttack;
 	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
@@ -22,6 +25,7 @@ public class Game {
 	private Game() {
 		myCharacter = new MyCharacter();
 		smalldragons = new ArrayList<smallDragon>();
+		fireAttack = new ArrayList<fireAttack>();
 		
 	}
 	
@@ -53,6 +57,9 @@ public class Game {
 	
 	
 	public void smallDragonsmove() {
+		
+		// durante il movimento voglio che con una percentuale bassa ad ogni passo
+		
 		for(int i = 0 ; i< smalldragons.size();++i) {
 			if(myCharacter.x < smalldragons.get(i).x ) {
 				smalldragons.get(i).isRight = false;
@@ -60,15 +67,32 @@ public class Game {
 			else {
 				smalldragons.get(i).isRight = true;
 			}
+			
 			if(smalldragons.get(i).isRight) {
 				smalldragons.get(i).x += smalldragons.get(i).speed;
 			}
 			else {
 				smalldragons.get(i).x -= smalldragons.get(i).speed;
 			}
+			
+			int prob = (int) (Math.random() * 500);
+			if(prob <= 1) {
+				fireAttack attacco = new fireAttack(smalldragons.get(i).x ,smalldragons.get(i).isRight);
+				fireAttack.add(attacco);
+			}
 		}
 	}
 	
+	public void moveFireAttacks() {
+		for(int i = 0; i<fireAttack.size();++i) {
+			if(fireAttack.get(i).isRight) {
+				fireAttack.get(i).x += fireAttack.get(i).speed;
+			}
+			else {
+				fireAttack.get(i).x -= fireAttack.get(i).speed;
+			}
+		}
+	}
 	
 	public void moveRight() {
 		myCharacterAnimations.isRight = true;
@@ -114,6 +138,14 @@ public class Game {
 	}
 	
 	public boolean myCharAttacked() {	// TO DO
+		
+		for(int i = 0; i<fireAttack.size();++i) {
+			if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangle())) {
+				myCharacter.life--;
+				return true;
+			}
+			
+		}
 		for(int i = 0; i<smalldragons.size();++i) {
 			if(myCharacter.getRectangle().intersects(smalldragons.get(i).getRectangle())) {
 				myCharacter.life--;
@@ -143,7 +175,7 @@ public class Game {
 				kills++;
 			}
 		}
-	}
+	}	
 	
 	public boolean isActionInProgress() {
 		return actionInProgress;
@@ -188,4 +220,7 @@ public class Game {
 	public int getLiveEnemies() {
 		return liveEnemies;
 	}
+	
+	
+	
 }

@@ -10,8 +10,9 @@ public class MyCharacter {
 	public  int y;
 	public  int speed; 
 	public  int life;
-	
-	
+	public boolean invulnerability = false;
+
+
 	public MyCharacter() {
 		x = 400;
 		y = 800;
@@ -26,12 +27,12 @@ public class MyCharacter {
 	}
 	
 	public Rectangle attackRight() {
-		Rectangle r = new Rectangle(x+30,y,40,40);
+		Rectangle r = new Rectangle(x+40,y,40,40);
 		return r;
 	}
 	
 	public Rectangle attackLeft() {
-		Rectangle r = new Rectangle(x-30,y,40,40);
+		Rectangle r = new Rectangle(x-40,y,40,40);
 		return r;
 	}
 }

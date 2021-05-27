@@ -22,11 +22,15 @@ public class GraphicPanel extends JPanel {
 
 	private static final long serialVersionUID = 4467360867545965264L;
 	private myCharacterAnimations myCharacteranimations = new myCharacterAnimations();
+	// una capacità di 100 è sicuramente sufficiente perché non andrò mai a generare così tanti nemici o attacchi
 	public static ArrayList<smallDragonAnimations> smallDragonanimations = new ArrayList<smallDragonAnimations>();
 	private Image heart;
 	private Image floor;
 	private Image Background;
-	private int cont = 0;
+	private Image leftFireAttack;
+	private Image rightFireAttack;
+	private int contSmallDragonSpawned = 0;
+	private int contInvulnerabilityFrames = 0;
 
 	public GraphicPanel() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -43,6 +47,8 @@ public class GraphicPanel extends JPanel {
 			Background = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/gameBackground.jpg"));
 			floor = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/floor.jpg"));
 			heart = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/heart.png"));
+			leftFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/leftAttack/attackLeft0.png"));
+			rightFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/rightAttack/attackRight0.png"));
 		} catch (IOException e) {
 			System.out.println("Can't load map images");
 		}
@@ -65,12 +71,33 @@ public class GraphicPanel extends JPanel {
 		for(int i = 0 ; i<Game.getInstance().getCharacter().life;++i) {
 			g.drawImage(heart,50+i*20 ,50 ,20 ,20,null);
 		}
-		// DISEGNO IL MIO PERSONAGGIO
-		g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+		
+		// DISEGNO IL MIO PERSONAGGIO, NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO 
+		// IN MODO "LAMPEGGIANTE" COSì CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI QUESTO EFFETTO
+		if(Game.getInstance().getCharacter().invulnerability) {
+			if(contInvulnerabilityFrames % 2  == 0) {
+				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+			}
+			contInvulnerabilityFrames++;
+		}
+		else {
+			g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+		}
 		
 		resize();
+		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
 		for(int i = 0; i<Game.smalldragons.size();++i) {
 			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.smalldragons.get(i).x,Game.smalldragons.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+		}
+		
+		//DISEGNO GLI ATTACCHI DEI PICCOLI DRAGHI
+		for(int i =0 ; i<Game.fireAttack.size();++i) {
+			if(Game.fireAttack.get(i).isRight) {
+				g.drawImage(rightFireAttack,Game.fireAttack.get(i).x,Game.fireAttack.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+			}
+			else {
+				g.drawImage(leftFireAttack,Game.fireAttack.get(i).x,Game.fireAttack.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+			}
 		}
 		
 		g.setColor(Color.RED);
@@ -82,10 +109,8 @@ public class GraphicPanel extends JPanel {
 	}
 	
 	public void updateAnimation(int type) {
-		
-		myCharacteranimations.changeAnimation(type);
-		
 		resize();
+		myCharacteranimations.changeAnimation(type);
 		for(int i = 0 ; i<Game.smalldragons.size();++i){
 			if(Game.smalldragons.get(i).isRight) {
 				smallDragonanimations.get(i).setCurrentAnimation(true);
@@ -97,31 +122,28 @@ public class GraphicPanel extends JPanel {
 	}
 	
 	public void update() {
-		
 		resize();
-		
-		for(int i = 0 ; i<Game.smalldragons.size();++i) {
+		for(int i = 0 ; i<smallDragonanimations.size();++i) {
 			smallDragonanimations.get(i).update();
 		}
 		myCharacteranimations.update();
 		repaint();
 	}
 	
-	
 	public void resize() {
 		while(Game.smalldragons.size() > smallDragonanimations.size()) {
 			smallDragonAnimations animazione = new smallDragonAnimations();
 			// nemico che spawna a sx
-			if(cont == 0) {
+			if(contSmallDragonSpawned == 0) {
 				animazione.setCurrentAnimation(true);
 			}
 			// nemico che spawna a dx
 			else {
 				animazione.setCurrentAnimation(false);
 			}
-			cont++;
-			if(cont == 2) {
-				cont = 0;
+			contSmallDragonSpawned++;
+			if(contSmallDragonSpawned == 2) {
+				contSmallDragonSpawned = 0;
 			}
 			smallDragonanimations.add(animazione);
 		}
