@@ -16,15 +16,36 @@ public class GameLoop extends Thread{
 		super.run();
 		while(true) {
 			try {
+				if(Game.getInstance().getKills() == 6) {
+					Game.getInstance().setRound(2);
+				}
 				
 				if(Game.getInstance().getRound() == 1) {
 					if(Game.getInstance().getLiveEnemies() == 0) {
-						Game.getInstance().spawnSmallDragonLeft();
-						Game.getInstance().spawnSmallDragonRight();
+						Game.getInstance().spawnSmallDragonLeft(-200);
+						Game.getInstance().spawnSmallDragonRight(1005);
+						Game.getInstance().spawnSmallDragonLeft(-300);
 					}
-					Game.getInstance().smallDragonsmove();
-					Game.getInstance().moveFireAttacks();
 				}
+				
+				if(Game.getInstance().getRound() == 2) {
+					if(Game.getInstance().getLiveEnemies() == 0) {
+						Game.getInstance().spawnSmallDragonLeft(-200);
+						Game.getInstance().spawnSmallDragonRight(1005);
+						Game.getInstance().spawnLizardLeft(-100);
+						Game.getInstance().spawnLizardRight(1205);
+					}
+				}
+				
+				Game.getInstance().smallDragonsmove();
+				Game.getInstance().moveFireAttacks();
+				Game.getInstance().lizardMove();
+				
+				
+				
+				
+				
+				
 				if(Invulnerability == 0) {
 					// se vengo attaccato divento invulnerabile
 					if(Game.getInstance().myCharAttacked()) {
@@ -37,6 +58,11 @@ public class GameLoop extends Thread{
 					Invulnerability = 0;
 					Game.getInstance().getCharacter().invulnerability = false;
 				}
+				
+				
+				
+				
+				
 				controller.update();
 				Thread.sleep(30);
 			} catch (InterruptedException e) {

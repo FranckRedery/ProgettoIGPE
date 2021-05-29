@@ -25,14 +25,14 @@ public class GraphicPanel extends JPanel {
 
 	private static final long serialVersionUID = 4467360867545965264L;
 	private myCharacterAnimations myCharacteranimations = new myCharacterAnimations();
-	// una capacità di 100 è sicuramente sufficiente perché non andrò mai a generare così tanti nemici o attacchi
 	public static ArrayList<smallDragonAnimations> smallDragonanimations = new ArrayList<smallDragonAnimations>();
+	public static ArrayList<lizardAnimations> lizardanimations = new ArrayList<lizardAnimations>();
 	private Image heart;
 	private Image floor;
 	private Image Background;
 	private Image leftFireAttack;
 	private Image rightFireAttack;
-	private int contSmallDragonSpawned = 0;
+	private int enemySpawned = 0;
 	private int contInvulnerabilityFrames = 0;
 
 	public GraphicPanel() {
@@ -96,20 +96,33 @@ public class GraphicPanel extends JPanel {
 		
 		resize();
 		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
-		for(int i = 0; i<Game.smalldragons.size();++i) {
-			g.drawRect(Game.smalldragons.get(i).x+25,Game.smalldragons.get(i).y+40, 50, 20);
-			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.smalldragons.get(i).x,Game.smalldragons.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+		for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
+			g.drawRect(Game.getInstance().getSmalldragons().get(i).x+25,Game.getInstance().getSmalldragons().get(i).y+40, 50, 20);
+			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.getInstance().getSmalldragons().get(i).x,Game.getInstance().getSmalldragons().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+		}
+		
+		// DISEGNO I NEMICI LIZARD
+		//Rectangle r = new Rectangle(x+25, y+40, 50, 20);
+		for(int i = 0; i<Game.getInstance().getLizards().size();++i) {
+			if(Game.getInstance().getLizards().get(i).isRight) {
+				g.drawRect(Game.getInstance().getLizards().get(i).x+70,Game.getInstance().getLizards().get(i).y+80, 40, 40);
+				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
+			}
+			else {
+				g.drawRect(Game.getInstance().getLizards().get(i).x+90,Game.getInstance().getLizards().get(i).y+80, 40, 40);
+				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
+			}
 		}
 		
 		//DISEGNO GLI ATTACCHI DEI PICCOLI DRAGHI
-		for(int i =0 ; i<Game.fireAttack.size();++i) {
-			if(Game.fireAttack.get(i).isRight) {
-				g.drawImage(rightFireAttack,Game.fireAttack.get(i).x,Game.fireAttack.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				g.drawRect(Game.fireAttack.get(i).x+45,Game.fireAttack.get(i).y+50, 30, 20);
+		for(int i =0 ; i<Game.getInstance().getFireAttack().size();++i) {
+			if(Game.getInstance().getFireAttack().get(i).isRight) {
+				g.drawImage(rightFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+				g.drawRect(Game.getInstance().getFireAttack().get(i).x+45,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
 			}
 			else {
-				g.drawImage(leftFireAttack,Game.fireAttack.get(i).x,Game.fireAttack.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				g.drawRect(Game.fireAttack.get(i).x+30,Game.fireAttack.get(i).y+50, 30, 20);
+				g.drawImage(leftFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+				g.drawRect(Game.getInstance().getFireAttack().get(i).x+30,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
 			}
 		}
 		
@@ -122,44 +135,65 @@ public class GraphicPanel extends JPanel {
 	}
 	
 	public void updateAnimation(int type) {
-		resize();
 		myCharacteranimations.changeAnimation(type);
-		for(int i = 0 ; i<Game.smalldragons.size();++i){
-			if(Game.smalldragons.get(i).isRight) {
+		for(int i = 0 ; i<Game.getInstance().getSmalldragons().size();++i){
+			if(Game.getInstance().getSmalldragons().get(i).isRight) {
 				smallDragonanimations.get(i).setCurrentAnimation(true);
 			}
 			else {
 				smallDragonanimations.get(i).setCurrentAnimation(false);
 			}
 		}
+		for(int i = 0; i<Game.getInstance().getLizards().size();++i) {
+			if(Game.getInstance().getLizards().get(i).isRight) {
+				lizardanimations.get(i).setCurrentAnimation(true);
+			}
+			else {
+				lizardanimations.get(i).setCurrentAnimation(false);
+			}
+		}
 	}
 	
 	public void update() {
-		resize();
 		for(int i = 0 ; i<smallDragonanimations.size();++i) {
 			smallDragonanimations.get(i).update();
+		}
+		for(int i = 0; i<lizardanimations.size();++i) {
+			lizardanimations.get(i).update();
 		}
 		myCharacteranimations.update();
 		repaint();
 	}
 	
 	public void resize() {
-		while(Game.smalldragons.size() > smallDragonanimations.size()) {
+		while(smallDragonanimations.size() < Game.getInstance().getSmalldragons().size()) {
 			smallDragonAnimations animazione = new smallDragonAnimations();
 			// nemico che spawna a sx
-			if(contSmallDragonSpawned == 0) {
+			if(enemySpawned%2 == 0) {
 				animazione.setCurrentAnimation(true);
 			}
 			// nemico che spawna a dx
 			else {
 				animazione.setCurrentAnimation(false);
 			}
-			contSmallDragonSpawned++;
-			if(contSmallDragonSpawned == 2) {
-				contSmallDragonSpawned = 0;
-			}
+			enemySpawned++;
 			smallDragonanimations.add(animazione);
 		}
+		
+		while(lizardanimations.size() < Game.getInstance().getLizards().size()) {
+			lizardAnimations anim = new lizardAnimations();
+			if(enemySpawned%2 == 0) {
+				anim.setCurrentAnimation(true);
+			}
+			// nemico che spawna a dx
+			else {
+				anim.setCurrentAnimation(false);
+			}
+			enemySpawned++;
+			lizardanimations.add(anim);	
+		}
 	}
+	
+	
 }
 

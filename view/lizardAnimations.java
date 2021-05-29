@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-public class smallDragonAnimations {
+public class lizardAnimations {
 
 	public static final int WALK_LEFT = 1;
 	public static final int WALK_RIGHT = 2;
@@ -17,10 +17,10 @@ public class smallDragonAnimations {
 	private HashMap<Integer, smallDragonAnimation> animations;
 	private smallDragonAnimation currentAnimation;
 
-	smallDragonAnimations() {
+	lizardAnimations() {
 		animations = new HashMap<Integer, smallDragonAnimation>();
-		animations.put(WALK_LEFT, new smallDragonAnimation(getResources("enemy/smallDragon/leftWalk")));
-		animations.put(WALK_RIGHT, new smallDragonAnimation(getResources("enemy/smallDragon/rightWalk")));
+		animations.put(WALK_LEFT, new smallDragonAnimation(getResources("enemy/lizard/leftWalk")));
+		animations.put(WALK_RIGHT, new smallDragonAnimation(getResources("enemy/lizard/rightWalk")));
 		currentAnimation = animations.get(WALK_RIGHT);
 	}
 

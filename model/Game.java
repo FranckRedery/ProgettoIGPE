@@ -12,8 +12,9 @@ import application.view.smallDragonAnimation;
 public class Game {
 
 	private MyCharacter myCharacter;
-	public static ArrayList<smallDragon> smalldragons;
-	public static ArrayList<fireAttack> fireAttack;
+	private ArrayList<smallDragon> smalldragons;
+	private ArrayList<lizard> lizards;
+	private ArrayList<fireAttack> fireAttack;
 	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
@@ -25,6 +26,7 @@ public class Game {
 	private Game() {
 		myCharacter = new MyCharacter();
 		smalldragons = new ArrayList<smallDragon>();
+		lizards = new ArrayList<lizard>();
 		fireAttack = new ArrayList<fireAttack>();
 		
 	}
@@ -43,22 +45,19 @@ public class Game {
 		}
 	}
 	
-	public void spawnSmallDragonLeft() {
-		smallDragon drake = new smallDragon(true);
-		liveEnemies = getLiveEnemies() + 1;
+	public void spawnSmallDragonLeft(int x) {
+		smallDragon drake = new smallDragon(true,x);
+		liveEnemies++;
 		smalldragons.add(drake);
 	}
 	
-	public void spawnSmallDragonRight() {
-		smallDragon drake = new smallDragon(false);
-		liveEnemies = getLiveEnemies() + 1;
+	public void spawnSmallDragonRight(int x) {
+		smallDragon drake = new smallDragon(false,x);
+		liveEnemies++;
 		smalldragons.add(drake);
 	}
-	
 	
 	public void smallDragonsmove() {
-		
-		// durante il movimento voglio che con una percentuale bassa ad ogni passo
 		
 		for(int i = 0 ; i< smalldragons.size();++i) {
 			if(myCharacter.x < smalldragons.get(i).x ) {
@@ -75,10 +74,41 @@ public class Game {
 				smalldragons.get(i).x -= smalldragons.get(i).speed;
 			}
 			
+			// durante il movimento voglio che con una percentuale bassa ad ogni passo si generino attacchi
 			int prob = (int) (Math.random() * 500);
 			if(prob <= 1) {
 				fireAttack attacco = new fireAttack(smalldragons.get(i).x ,smalldragons.get(i).isRight);
 				fireAttack.add(attacco);
+			}
+		}
+	}
+	
+	public void spawnLizardLeft(int x) {
+		lizard liz = new lizard(true,x);
+		liveEnemies++;
+		lizards.add(liz);
+	}
+	
+	public void spawnLizardRight(int x) {
+		lizard liz = new lizard(false,x);
+		liveEnemies++;
+		lizards.add(liz);
+	}
+	
+	public void lizardMove() {
+		for(int i =0 ; i<lizards.size();++i) {
+			if(myCharacter.x < lizards.get(i).x +50) {
+				lizards.get(i).isRight = false;
+			}
+			else {
+				lizards.get(i).isRight = true;
+			}
+			
+			if(lizards.get(i).isRight) {
+				lizards.get(i).x += lizards.get(i).speed;
+			}
+			else {
+				lizards.get(i).x -= lizards.get(i).speed;
 			}
 		}
 	}
@@ -144,22 +174,20 @@ public class Game {
 	public boolean myCharAttacked() {
 		
 		for(int i = 0; i<fireAttack.size();++i) {
-			if(fireAttack.get(i).isRight) {
-				if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangleRight())) {
+				if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangle())) {
 					myCharacter.life--;
 					return true;
-				}
+				}	
 			}
-			else {
-				if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangleLeft())) {
-					myCharacter.life--;
-					return true;
-				}
-			}
-			
-		}
 		for(int i = 0; i<smalldragons.size();++i) {
 			if(myCharacter.getRectangle().intersects(smalldragons.get(i).getRectangle())) {
+				myCharacter.life--;
+				return true;
+			}
+		}
+		
+		for(int i = 0; i<lizards.size();++i) {
+			if(myCharacter.getRectangle().intersects(lizards.get(i).getRectangle())) {
 				myCharacter.life--;
 				return true;
 			}
@@ -176,6 +204,14 @@ public class Game {
 				kills++;
 			}
 		}
+		for(int i = 0; i<lizards.size();++i) {
+			if(myCharacter.attackRight().intersects(lizards.get(i).getRectangle())) {
+				lizards.remove(i);
+				GraphicPanel.lizardanimations.remove(i);
+				liveEnemies--;
+				kills++;
+			}
+		}
 	}
 
 	public void myCharAttackLeft() {
@@ -187,7 +223,28 @@ public class Game {
 				kills++;
 			}
 		}
+		for(int i = 0; i<lizards.size();++i) {
+			if(myCharacter.attackLeft().intersects(lizards.get(i).getRectangle())) {
+				lizards.remove(i);
+				GraphicPanel.lizardanimations.remove(i);
+				liveEnemies--;
+				kills++;
+			}
+		}
 	}	
+	
+	public ArrayList<smallDragon> getSmalldragons() {
+		return smalldragons;
+	}
+
+	public ArrayList<lizard> getLizards() {
+		return lizards;
+	}
+
+	public ArrayList<fireAttack> getFireAttack() {
+		return fireAttack;
+	}
+	
 	
 	public boolean isActionInProgress() {
 		return actionInProgress;

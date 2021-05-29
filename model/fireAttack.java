@@ -7,7 +7,7 @@ public class fireAttack {
 	public int x;
 	public int y = 810;
 	public boolean isRight;
-	public int speed = 5;
+	public int speed = 7;
 	
 	
 	public fireAttack(int x, boolean right) {
@@ -21,15 +21,14 @@ public class fireAttack {
 	}
 	
 	
-	public  Rectangle getRectangleLeft() {
-		Rectangle r = new Rectangle(x+30, y+50, 30, 20);
+	public  Rectangle getRectangle() {
+		Rectangle r;
+		if(isRight) {
+			r = new Rectangle(x+45,y+50,30,20);
+			return r;
+		}
+		r = new Rectangle(x+30, y+50, 30, 20);
 		return r;
 	}
-	
-	public Rectangle getRectangleRight() {
-		Rectangle r = new Rectangle(x+45,y+50,30,20);
-		return r;
-	}
-	
 	
 }

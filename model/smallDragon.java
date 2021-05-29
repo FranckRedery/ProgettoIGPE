@@ -11,14 +11,9 @@ public class smallDragon {
 	public  int life = 1;
 	public  boolean isRight;
 	
-	public smallDragon(boolean right) {
+	public smallDragon(boolean right,int x) {
 		this.isRight = right;
-		if(right) {
-			x = -200;
-		}
-		else {
-			x = 1005;
-		}
+		this.x = x;
 	}
 	
 	public  Rectangle getRectangle() {
