@@ -21,9 +21,8 @@ public class smallDragon {
 		}
 	}
 	
-	
 	public  Rectangle getRectangle() {
-		Rectangle r = new Rectangle(x, y, 40, 20);
+		Rectangle r = new Rectangle(x+25, y+40, 50, 20);
 		return r;
 	}
 	

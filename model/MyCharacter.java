@@ -20,19 +20,17 @@ public class MyCharacter {
 		life = 5;
 	}
 	
-	
 	public  Rectangle getRectangle() {
-		Rectangle r = new Rectangle(x, y, 40, 40);
+		Rectangle r = new Rectangle(x+30, y+23, 35, 55);
 		return r;
 	}
 	
 	public Rectangle attackRight() {
-		Rectangle r = new Rectangle(x+40,y,40,40);
+		Rectangle r = new Rectangle(x+60,y+25,40,60);
 		return r;
 	}
-	
 	public Rectangle attackLeft() {
-		Rectangle r = new Rectangle(x-40,y,40,40);
+		Rectangle r = new Rectangle(x,y+25,40,60);
 		return r;
 	}
 }

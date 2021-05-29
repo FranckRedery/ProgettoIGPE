@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +63,7 @@ public class GraphicPanel extends JPanel {
 		// PER OGNI NEMICO O PERSONAGGIO DA INSERIRE VANNO CREATE DUE CLASSI MOLTO SIMILI A CHARACTERANIMATIONS E MYCHARACTERANIMATIONS
 		
 		super.paintComponent(g);
+		
 		g.drawImage(Background,0,0,1920,1080,null);
 		// DISEGNO IL PAVIMENTO
 		for(int i = 0 ; i<20;++i) {
@@ -77,16 +81,23 @@ public class GraphicPanel extends JPanel {
 		if(Game.getInstance().getCharacter().invulnerability) {
 			if(contInvulnerabilityFrames % 2  == 0) {
 				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+				g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
+				g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
+				g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
 			}
 			contInvulnerabilityFrames++;
 		}
 		else {
 			g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+			g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
+			g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
+			g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
 		}
 		
 		resize();
 		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
 		for(int i = 0; i<Game.smalldragons.size();++i) {
+			g.drawRect(Game.smalldragons.get(i).x+25,Game.smalldragons.get(i).y+40, 50, 20);
 			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.smalldragons.get(i).x,Game.smalldragons.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
 		}
 		
@@ -94,9 +105,11 @@ public class GraphicPanel extends JPanel {
 		for(int i =0 ; i<Game.fireAttack.size();++i) {
 			if(Game.fireAttack.get(i).isRight) {
 				g.drawImage(rightFireAttack,Game.fireAttack.get(i).x,Game.fireAttack.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+				g.drawRect(Game.fireAttack.get(i).x+45,Game.fireAttack.get(i).y+50, 30, 20);
 			}
 			else {
 				g.drawImage(leftFireAttack,Game.fireAttack.get(i).x,Game.fireAttack.get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+				g.drawRect(Game.fireAttack.get(i).x+30,Game.fireAttack.get(i).y+50, 30, 20);
 			}
 		}
 		

@@ -91,6 +91,10 @@ public class Game {
 			else {
 				fireAttack.get(i).x -= fireAttack.get(i).speed;
 			}
+			// se va fuori schermo tolgo l'attacco
+			if(fireAttack.get(i).x > 1000 || fireAttack.get(i).x < 0) {
+				fireAttack.remove(i);
+			}
 		}
 	}
 	
@@ -137,12 +141,20 @@ public class Game {
 		return myCharacter;
 	}
 	
-	public boolean myCharAttacked() {	// TO DO
+	public boolean myCharAttacked() {
 		
 		for(int i = 0; i<fireAttack.size();++i) {
-			if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangle())) {
-				myCharacter.life--;
-				return true;
+			if(fireAttack.get(i).isRight) {
+				if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangleRight())) {
+					myCharacter.life--;
+					return true;
+				}
+			}
+			else {
+				if(myCharacter.getRectangle().intersects(fireAttack.get(i).getRectangleLeft())) {
+					myCharacter.life--;
+					return true;
+				}
 			}
 			
 		}
@@ -220,7 +232,4 @@ public class Game {
 	public int getLiveEnemies() {
 		return liveEnemies;
 	}
-	
-	
-	
 }

@@ -12,13 +12,24 @@ public class fireAttack {
 	
 	public fireAttack(int x, boolean right) {
 		this.isRight = right;
-		this.x = x;
+		if(isRight) {
+			this.x = x+10;
+		}
+		else {
+			this.x = x-10;
+		}
 	}
 	
 	
-	public  Rectangle getRectangle() {
-		Rectangle r = new Rectangle(x, y, 25, 20);
+	public  Rectangle getRectangleLeft() {
+		Rectangle r = new Rectangle(x+30, y+50, 30, 20);
 		return r;
 	}
+	
+	public Rectangle getRectangleRight() {
+		Rectangle r = new Rectangle(x+45,y+50,30,20);
+		return r;
+	}
+	
 	
 }
