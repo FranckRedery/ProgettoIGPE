@@ -16,15 +16,16 @@ public class GameLoop extends Thread{
 		super.run();
 		while(true) {
 			try {
-				if(Game.getInstance().getKills() == 6) {
+				if(Game.getInstance().getKills() == 8) {
 					Game.getInstance().setRound(2);
 				}
-				
+				// deve sempre prima spawnare a sx e poi a dx altrimenti l'animazione iniziale viene settata al contrario
 				if(Game.getInstance().getRound() == 1) {
 					if(Game.getInstance().getLiveEnemies() == 0) {
 						Game.getInstance().spawnSmallDragonLeft(-200);
 						Game.getInstance().spawnSmallDragonRight(1005);
 						Game.getInstance().spawnSmallDragonLeft(-300);
+						Game.getInstance().spawnSmallDragonRight(1305);
 					}
 				}
 				
@@ -37,13 +38,16 @@ public class GameLoop extends Thread{
 					}
 				}
 				
+				
+				if(Game.getInstance().getCharacter().life < 5) {
+					Game.getInstance().spawnHeart(Game.getInstance().getRound());
+				}
+				
+				
 				Game.getInstance().smallDragonsmove();
 				Game.getInstance().moveFireAttacks();
 				Game.getInstance().lizardMove();
-				
-				
-				
-				
+				Game.getInstance().heartTaken();
 				
 				
 				if(Invulnerability == 0) {

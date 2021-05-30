@@ -2,6 +2,7 @@ package application.model;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Random;
 
 import application.Settings;
 import application.view.GraphicPanel;
@@ -15,6 +16,7 @@ public class Game {
 	private ArrayList<smallDragon> smalldragons;
 	private ArrayList<lizard> lizards;
 	private ArrayList<fireAttack> fireAttack;
+	private ArrayList<heart> hearts;
 	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
@@ -28,6 +30,7 @@ public class Game {
 		smalldragons = new ArrayList<smallDragon>();
 		lizards = new ArrayList<lizard>();
 		fireAttack = new ArrayList<fireAttack>();
+		hearts = new ArrayList<heart>();
 		
 	}
 	
@@ -75,8 +78,9 @@ public class Game {
 			}
 			
 			// durante il movimento voglio che con una percentuale bassa ad ogni passo si generino attacchi
-			int prob = (int) (Math.random() * 500);
-			if(prob <= 1) {
+			Random random = new Random();
+			int r = random.nextInt(500);
+			if(r == 1) {
 				fireAttack attacco = new fireAttack(smalldragons.get(i).x ,smalldragons.get(i).isRight);
 				fireAttack.add(attacco);
 			}
@@ -127,6 +131,32 @@ public class Game {
 			}
 		}
 	}
+	
+	
+	public void spawnHeart(int round) {
+		
+		Random random = new Random();
+		// la probabilità di spawn del cuore è inversamente proporzionale al numero di vite mancanti 
+		// e direttamente proporzionale ai round
+		if(random.nextInt(3500) <= round*2 * (5 - myCharacter.life)) {
+			
+			int x = random.nextInt(800) + 100;
+			heart h = new heart(x);
+			hearts.add(h);
+		}
+		
+	}
+	
+	
+	public void heartTaken() {
+		for(int i = 0; i<hearts.size();++i) {
+			if(myCharacter.getRectangle().intersects(hearts.get(i).getRectangle())) {
+				myCharacter.life++;
+				hearts.remove(i);
+			}
+		}
+	}
+	
 	
 	public void moveRight() {
 		myCharacterAnimations.isRight = true;
@@ -232,6 +262,11 @@ public class Game {
 			}
 		}
 	}	
+	
+	public ArrayList<heart> getHearts() {
+		return hearts;
+	}
+
 	
 	public ArrayList<smallDragon> getSmalldragons() {
 		return smalldragons;

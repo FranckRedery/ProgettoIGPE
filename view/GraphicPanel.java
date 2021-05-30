@@ -76,40 +76,45 @@ public class GraphicPanel extends JPanel {
 			g.drawImage(heart,50+i*20 ,50 ,20 ,20,null);
 		}
 		
+		//disegno i cuori che spawnano (prendibili)
+		for(int i = 0; i<Game.getInstance().getHearts().size();++i) {
+			g.drawImage(heart, Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20,null);
+			g.drawRect(Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20);
+		}
+		
 		// DISEGNO IL MIO PERSONAGGIO, NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO 
 		// IN MODO "LAMPEGGIANTE" COSì CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI QUESTO EFFETTO
 		if(Game.getInstance().getCharacter().invulnerability) {
 			if(contInvulnerabilityFrames % 2  == 0) {
 				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
-				g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
-				g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
+				//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
+				//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
+				//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
 			}
 			contInvulnerabilityFrames++;
 		}
 		else {
 			g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-			g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
-			g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
-			g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
+			//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
+			//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
+			//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
 		}
 		
 		resize();
 		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
 		for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
-			g.drawRect(Game.getInstance().getSmalldragons().get(i).x+25,Game.getInstance().getSmalldragons().get(i).y+40, 50, 20);
+			//g.drawRect(Game.getInstance().getSmalldragons().get(i).x+25,Game.getInstance().getSmalldragons().get(i).y+40, 50, 20);
 			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.getInstance().getSmalldragons().get(i).x,Game.getInstance().getSmalldragons().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
 		}
 		
 		// DISEGNO I NEMICI LIZARD
-		//Rectangle r = new Rectangle(x+25, y+40, 50, 20);
 		for(int i = 0; i<Game.getInstance().getLizards().size();++i) {
 			if(Game.getInstance().getLizards().get(i).isRight) {
-				g.drawRect(Game.getInstance().getLizards().get(i).x+70,Game.getInstance().getLizards().get(i).y+80, 40, 40);
+				//g.drawRect(Game.getInstance().getLizards().get(i).x+70,Game.getInstance().getLizards().get(i).y+80, 40, 40);
 				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
 			}
 			else {
-				g.drawRect(Game.getInstance().getLizards().get(i).x+90,Game.getInstance().getLizards().get(i).y+80, 40, 40);
+				//g.drawRect(Game.getInstance().getLizards().get(i).x+90,Game.getInstance().getLizards().get(i).y+80, 40, 40);
 				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
 			}
 		}
@@ -118,11 +123,11 @@ public class GraphicPanel extends JPanel {
 		for(int i =0 ; i<Game.getInstance().getFireAttack().size();++i) {
 			if(Game.getInstance().getFireAttack().get(i).isRight) {
 				g.drawImage(rightFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				g.drawRect(Game.getInstance().getFireAttack().get(i).x+45,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
+				//g.drawRect(Game.getInstance().getFireAttack().get(i).x+45,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
 			}
 			else {
 				g.drawImage(leftFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				g.drawRect(Game.getInstance().getFireAttack().get(i).x+30,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
+				//g.drawRect(Game.getInstance().getFireAttack().get(i).x+30,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
 			}
 		}
 		

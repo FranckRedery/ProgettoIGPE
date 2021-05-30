@@ -7,7 +7,7 @@ public class smallDragon {
 	
 	public  int x;
 	public  int y = 820;
-	public  int speed = 1; 
+	public  int speed = 2; 
 	public  int life = 1;
 	public  boolean isRight;
 	
