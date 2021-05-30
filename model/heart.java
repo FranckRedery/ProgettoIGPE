@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 public class heart {
 	
 	public  int x;
-	public  int y = 863;
+	public  int y = 0;
 	
 	public heart(int x) {
 		this.x = x;

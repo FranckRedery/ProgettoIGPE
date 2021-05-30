@@ -46,6 +46,7 @@ public class GameLoop extends Thread{
 				
 				Game.getInstance().smallDragonsmove();
 				Game.getInstance().moveFireAttacks();
+				Game.getInstance().moveHearts();
 				Game.getInstance().lizardMove();
 				Game.getInstance().heartTaken();
 				

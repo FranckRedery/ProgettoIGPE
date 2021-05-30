@@ -147,6 +147,14 @@ public class Game {
 		
 	}
 	
+	public void moveHearts() {
+		for(int i = 0; i<hearts.size();++i) {
+			if(hearts.get(i).y < 864) {
+				hearts.get(i).y += 4;
+			}
+		}
+	}
+	
 	
 	public void heartTaken() {
 		for(int i = 0; i<hearts.size();++i) {
