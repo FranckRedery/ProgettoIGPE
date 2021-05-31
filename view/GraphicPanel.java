@@ -32,6 +32,7 @@ public class GraphicPanel extends JPanel {
 	private Image Background;
 	private Image leftFireAttack;
 	private Image rightFireAttack;
+	private Image tombstone;
 	private int enemySpawned = 0;
 	private int contInvulnerabilityFrames = 0;
 
@@ -52,6 +53,7 @@ public class GraphicPanel extends JPanel {
 			heart = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/heart.png"));
 			leftFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/leftAttack/attackLeft0.png"));
 			rightFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/rightAttack/attackRight0.png"));
+			tombstone = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/tombstone.png"));
 		} catch (IOException e) {
 			System.out.println("Can't load map images");
 		}
@@ -63,7 +65,6 @@ public class GraphicPanel extends JPanel {
 		// PER OGNI NEMICO O PERSONAGGIO DA INSERIRE VANNO CREATE DUE CLASSI MOLTO SIMILI A CHARACTERANIMATIONS E MYCHARACTERANIMATIONS
 		
 		super.paintComponent(g);
-		
 		g.drawImage(Background,0,0,1920,1080,null);
 		// DISEGNO IL PAVIMENTO
 		for(int i = 0 ; i<20;++i) {
@@ -79,25 +80,43 @@ public class GraphicPanel extends JPanel {
 		//disegno i cuori che spawnano (prendibili)
 		for(int i = 0; i<Game.getInstance().getHearts().size();++i) {
 			g.drawImage(heart, Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20,null);
-			g.drawRect(Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20);
+			//g.drawRect(Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20);
 		}
 		
-		// DISEGNO IL MIO PERSONAGGIO, NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO 
-		// IN MODO "LAMPEGGIANTE" COSì CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI QUESTO EFFETTO
-		if(Game.getInstance().getCharacter().invulnerability) {
-			if(contInvulnerabilityFrames % 2  == 0) {
+		if(!Game.getInstance().gameOver()) {
+			// DISEGNO IL MIO PERSONAGGIO, NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO 
+			// IN MODO "LAMPEGGIANTE" COSì CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI QUESTO EFFETTO
+			if(Game.getInstance().getCharacter().invulnerability) {
+				if(contInvulnerabilityFrames % 2  == 0) {
+					g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+					//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
+					//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
+					//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
+				}
+				contInvulnerabilityFrames++;
+			}
+			else {
 				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
 				//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
-				//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
 				//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
+				//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
 			}
-			contInvulnerabilityFrames++;
 		}
-		else {
-			g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-			//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
-			//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
-			//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
+		
+		//DISEGNO LA LAPIDE E LE SCRITTE DI GAMEOVER
+		else if(Game.getInstance().gameOver()){
+			g.setFont(new Font("Fiendish",Font.PLAIN,30));
+			g.setColor(Color.RED);
+			g.drawString("You died" , 390, 450);
+			g.setFont(new Font("Fiendish",Font.PLAIN,20));
+			g.drawString("Press R to start a new game or Esc to quit", 180,530);
+			g.drawImage(tombstone,Game.getInstance().getCharacter().x,791,Settings.BLOCK_DIM,Settings.BLOCK_DIM,null);
+		}
+		
+		if(Game.getInstance().isPause()) {
+			g.setFont(new Font("Fiendish",Font.PLAIN,30));
+			g.setColor(Color.RED);
+			g.drawString("Game paused" , 360, 450);
 		}
 		
 		resize();
@@ -131,8 +150,8 @@ public class GraphicPanel extends JPanel {
 			}
 		}
 		
-		g.setColor(Color.RED);
 		g.setFont(new Font("Fiendish",Font.PLAIN,20));
+		g.setColor(Color.RED);
 		g.drawString("Kills " + Game.getInstance().getKills() , 430, 40);
 		g.drawString("Health", 50, 40);
 		g.drawString("Round " + Game.getInstance().getRound(),840 , 40);

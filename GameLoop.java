@@ -39,19 +39,27 @@ public class GameLoop extends Thread{
 				}
 				
 				
-				if(Game.getInstance().getCharacter().life < 5) {
+				if(Game.getInstance().getCharacter().life < 5 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
 					Game.getInstance().spawnHeart(Game.getInstance().getRound());
 				}
 				
+				if(!Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
+					Game.getInstance().smallDragonsmove();
+					Game.getInstance().moveHearts();
+					Game.getInstance().lizardMove();
+					Game.getInstance().heartTaken();
+				}
 				
-				Game.getInstance().smallDragonsmove();
-				Game.getInstance().moveFireAttacks();
-				Game.getInstance().moveHearts();
-				Game.getInstance().lizardMove();
-				Game.getInstance().heartTaken();
+				if(!Game.getInstance().isPause()) {
+					Game.getInstance().moveFireAttacks();
+				}
 				
+				// se sono stato attaccato e metto in pausa, l'invulnerabilità tolta la pausa non deve scomparire subito ! 
+				if(Invulnerability != 0 && Game.getInstance().isPause()) {
+					Invulnerability = System.currentTimeMillis();
+				}
 				
-				if(Invulnerability == 0) {
+				if(Invulnerability == 0 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
 					// se vengo attaccato divento invulnerabile
 					if(Game.getInstance().myCharAttacked()) {
 						Invulnerability = System.currentTimeMillis();

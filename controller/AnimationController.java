@@ -20,66 +20,86 @@ public class AnimationController extends KeyAdapter {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_LEFT:
-				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() ) {
-					Game.getInstance().setActionInProgress(true);
-					Game.getInstance().moveLeft();
-					panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
-				}			
-			break;
-
-		case KeyEvent.VK_RIGHT:
-			if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight()) {
-				Game.getInstance().setActionInProgress(true);
-				Game.getInstance().moveRight();
-				panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
-			}		
-			break;
-
-		case KeyEvent.VK_D : 
-			if(!Game.getInstance().isActionInProgress()) {
-				Game.getInstance().setActionInProgress(true);
-				Game.getInstance().setJumpRight(true);
-				panel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
-			}
-			break;
 		
-		case KeyEvent.VK_S :
-			if(!Game.getInstance().isActionInProgress()) {
-				Game.getInstance().setActionInProgress(true);
-				Game.getInstance().setJumpLeft(true);
-				panel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
-			}
-			break;
-			
-			
-		case KeyEvent.VK_A:
-			if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isActionInProgress()) {
-				Game.getInstance().setActionInProgress(true);
-				if(myCharacterAnimations.isRight) {
-					panel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
-					Game.getInstance().myCharAttackRight();
-				}
-				else {
-					panel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
-					Game.getInstance().myCharAttackLeft();
-				}
-			}
-			break;
-			
-		case KeyEvent.VK_ESCAPE:
+		if(Game.getInstance().gameOver() && e.getKeyCode() == KeyEvent.VK_R) {
+			Game.restartGame();
+			panel.repaint();
+			return;
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			System.exit(0);
-			break;
-
-		default:
-			if(myCharacterAnimations.isRight) {
-				panel.updateAnimation(myCharacterAnimations.IDLE_RIGHT);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_P) {
+			if(Game.getInstance().isPause()) {
+				Game.getInstance().setPause(false);
 			}
 			else {
-				panel.updateAnimation(myCharacterAnimations.IDLE_LEFT);
+				Game.getInstance().setPause(true);
 			}
-			break;
+			return;
+		}
+		
+		if(!Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
+			switch (e.getKeyCode()) {
+			
+			case KeyEvent.VK_LEFT:
+					if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() ) {
+						Game.getInstance().setActionInProgress(true);
+						Game.getInstance().moveLeft();
+						panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
+					}			
+				break;
+
+			case KeyEvent.VK_RIGHT:
+				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight()) {
+					Game.getInstance().setActionInProgress(true);
+					Game.getInstance().moveRight();
+					panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
+				}		
+				break;
+
+			case KeyEvent.VK_D : 
+				if(!Game.getInstance().isActionInProgress()) {
+					Game.getInstance().setActionInProgress(true);
+					Game.getInstance().setJumpRight(true);
+					panel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
+				}
+				break;
+			
+			case KeyEvent.VK_S :
+				if(!Game.getInstance().isActionInProgress()) {
+					Game.getInstance().setActionInProgress(true);
+					Game.getInstance().setJumpLeft(true);
+					panel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
+				}
+				break;
+				
+				
+			case KeyEvent.VK_A:
+				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isActionInProgress()) {
+					Game.getInstance().setActionInProgress(true);
+					if(myCharacterAnimations.isRight) {
+						panel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
+						Game.getInstance().myCharAttackRight();
+					}
+					else {
+						panel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
+						Game.getInstance().myCharAttackLeft();
+					}
+				}
+				break;
+
+			default:
+				if(myCharacterAnimations.isRight) {
+					panel.updateAnimation(myCharacterAnimations.IDLE_RIGHT);
+				}
+				else {
+					panel.updateAnimation(myCharacterAnimations.IDLE_LEFT);
+				}
+				break;
+			}
 		}
 	}
 	

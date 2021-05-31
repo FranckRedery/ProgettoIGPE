@@ -6,6 +6,7 @@ import java.util.Random;
 
 import application.Settings;
 import application.view.GraphicPanel;
+import application.view.lizardAnimations;
 import application.view.myCharacterAnimations;
 import application.view.smallDragonAnimations;
 import application.view.smallDragonAnimation;
@@ -21,6 +22,7 @@ public class Game {
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
 	private boolean actionInProgress = false;
+	private boolean pause = false;
 	private int kills = 0;
 	private int round = 1;
 	private int liveEnemies = 0;
@@ -31,7 +33,8 @@ public class Game {
 		lizards = new ArrayList<lizard>();
 		fireAttack = new ArrayList<fireAttack>();
 		hearts = new ArrayList<heart>();
-		
+		GraphicPanel.smallDragonanimations = new ArrayList<smallDragonAnimations>();
+		GraphicPanel.lizardanimations = new ArrayList<lizardAnimations>();	
 	}
 	
 	public static Game getInstance() {
@@ -39,6 +42,14 @@ public class Game {
 			game = new Game();
 		}
 		return game;
+	}
+	
+	public static void restartGame() {
+		game = new Game();
+	}
+	
+	public boolean gameOver() {
+		return myCharacter.life == 0;
 	}
 	
 	public void moveLeft() {
@@ -138,7 +149,7 @@ public class Game {
 		Random random = new Random();
 		// la probabilità di spawn del cuore è inversamente proporzionale al numero di vite mancanti 
 		// e direttamente proporzionale ai round
-		if(random.nextInt(3500) <= round*2 * (5 - myCharacter.life)) {
+		if(random.nextInt(4000) <= round * (5 - myCharacter.life)) {
 			
 			int x = random.nextInt(800) + 100;
 			heart h = new heart(x);
@@ -331,5 +342,13 @@ public class Game {
 
 	public int getLiveEnemies() {
 		return liveEnemies;
+	}
+
+	public boolean isPause() {
+		return pause;
+	}
+
+	public void setPause(boolean pause) {
+		this.pause = pause;
 	}
 }
