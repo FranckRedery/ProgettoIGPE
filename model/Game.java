@@ -5,22 +5,24 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import application.Settings;
+import application.view.DemonAnimations;
 import application.view.GraphicPanel;
 import application.view.lizardAnimations;
 import application.view.myCharacterAnimations;
 import application.view.smallDragonAnimations;
-import application.view.smallDragonAnimation;
 
 public class Game {
 
 	private MyCharacter myCharacter;
 	private ArrayList<smallDragon> smalldragons;
 	private ArrayList<lizard> lizards;
+	private ArrayList<Demon> demons;
 	private ArrayList<fireAttack> fireAttack;
 	private ArrayList<heart> hearts;
 	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
+	private boolean JumpUP = false;
 	private boolean actionInProgress = false;
 	private boolean pause = false;
 	private int kills = 0;
@@ -31,10 +33,13 @@ public class Game {
 		myCharacter = new MyCharacter();
 		smalldragons = new ArrayList<smallDragon>();
 		lizards = new ArrayList<lizard>();
+		demons = new ArrayList<Demon>();
 		fireAttack = new ArrayList<fireAttack>();
 		hearts = new ArrayList<heart>();
 		GraphicPanel.smallDragonanimations = new ArrayList<smallDragonAnimations>();
 		GraphicPanel.lizardanimations = new ArrayList<lizardAnimations>();	
+		GraphicPanel.demonanimations = new ArrayList<DemonAnimations>();
+		
 	}
 	
 	public static Game getInstance() {
@@ -140,6 +145,44 @@ public class Game {
 		}
 	}
 	
+	public void spawnDemonLeft(int x) {
+		DemonAnimations animation = new DemonAnimations();
+		animation.setCurrentAnimation(true);
+		GraphicPanel.demonanimations.add(animation);	
+		Demon demon = new Demon(true,x);
+		liveEnemies++;
+		demons.add(demon);	
+	}
+	
+	public void spawnDemonRight(int x) {
+		DemonAnimations animation = new DemonAnimations();
+		animation.setCurrentAnimation(false);
+		GraphicPanel.demonanimations.add(animation);	
+		Demon demon = new Demon(false,x);
+		liveEnemies++;
+		demons.add(demon);	
+	}
+	
+	public void demonMove() {
+		for(int i =0 ; i<demons.size();++i) {
+			if(myCharacter.x < demons.get(i).x + 20) {
+				demons.get(i).isRight = false;
+			}
+			else {
+				demons.get(i).isRight = true;
+			}
+			
+			if(demons.get(i).isRight) {
+				demons.get(i).x += demons.get(i).speed;
+			}
+			else {
+				demons.get(i).x -= demons.get(i).speed;
+			}
+		}
+		
+	}
+	
+	
 	public void moveFireAttacks() {
 		for(int i = 0; i<fireAttack.size();++i) {
 			if(fireAttack.get(i).isRight) {
@@ -194,6 +237,14 @@ public class Game {
 		if((myCharacter.x + myCharacter.speed <= Settings.WINDOW_SIZE - Settings.BLOCK_DIM)) {
 			myCharacter.x += myCharacter.speed;
 		}
+	}
+	
+	public void jumpUP() {
+		myCharacter.y -= myCharacter.speed*8;
+	}
+	
+	public void jumpDOWN() {
+		myCharacter.y += myCharacter.speed*2;
 	}
 	
 	public void jumpRightUP() {
@@ -253,6 +304,12 @@ public class Game {
 				return true;
 			}
 		}
+		for(int i = 0; i<demons.size();++i) {
+			if(myCharacter.getRectangle().intersects(demons.get(i).getRectangle())) {
+				myCharacter.life--;
+				return true;
+			}
+		}
 		return false;
 	}
 	
@@ -269,6 +326,14 @@ public class Game {
 			if(myCharacter.attackRight().intersects(lizards.get(i).getRectangle())) {
 				lizards.remove(i);
 				GraphicPanel.lizardanimations.remove(i);
+				liveEnemies--;
+				kills++;
+			}
+		}
+		for(int i = 0; i<demons.size();++i) {
+			if(myCharacter.attackRight().intersects(demons.get(i).getRectangle())) {
+				demons.remove(i);
+				GraphicPanel.demonanimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -292,7 +357,19 @@ public class Game {
 				kills++;
 			}
 		}
+		for(int i = 0; i<demons.size();++i) {
+			if(myCharacter.attackLeft().intersects(demons.get(i).getRectangle())) {
+				demons.remove(i);
+				GraphicPanel.demonanimations.remove(i);
+				liveEnemies--;
+				kills++;
+			}
+		}
 	}	
+	
+	public ArrayList<Demon> getDemons() {
+		return demons;
+	}
 	
 	public ArrayList<heart> getHearts() {
 		return hearts;
@@ -362,5 +439,13 @@ public class Game {
 
 	public void setPause(boolean pause) {
 		this.pause = pause;
+	}
+
+	public boolean isJumpUP() {
+		return JumpUP;
+	}
+
+	public void setJumpUP(boolean jumpUP) {
+		JumpUP = jumpUP;
 	}
 }

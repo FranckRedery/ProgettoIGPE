@@ -27,6 +27,7 @@ public class GraphicPanel extends JPanel {
 	private myCharacterAnimations myCharacteranimations = new myCharacterAnimations();
 	public static ArrayList<smallDragonAnimations> smallDragonanimations = new ArrayList<smallDragonAnimations>();
 	public static ArrayList<lizardAnimations> lizardanimations = new ArrayList<lizardAnimations>();
+	public static ArrayList<DemonAnimations> demonanimations = new ArrayList<DemonAnimations>();
 	private Image heart;
 	private Image floor;
 	private Image Background;
@@ -88,17 +89,17 @@ public class GraphicPanel extends JPanel {
 			if(Game.getInstance().getCharacter().invulnerability) {
 				if(contInvulnerabilityFrames % 2  == 0) {
 					g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-					//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
-					//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
-					//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
+					//g.drawRect(Game.getInstance().getCharacter().x+37,Game.getInstance().getCharacter().y+23, 20, 55);
+					//g.drawRect(Game.getInstance().getCharacter().x+40,Game.getInstance().getCharacter().y+25, 65, 60);
+					//g.drawRect(Game.getInstance().getCharacter().x-5,Game.getInstance().getCharacter().y+25, 65, 60);
 				}
 				contInvulnerabilityFrames++;
 			}
 			else {
 				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				//g.drawRect(Game.getInstance().getCharacter().x+30,Game.getInstance().getCharacter().y+23, 35, 55);
-				//g.drawRect(Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y+25, 40, 60);
-				//g.drawRect(Game.getInstance().getCharacter().x+60,Game.getInstance().getCharacter().y+25, 40, 60);
+				//g.drawRect(Game.getInstance().getCharacter().x+37,Game.getInstance().getCharacter().y+23, 20, 55);
+				//g.drawRect(Game.getInstance().getCharacter().x-5,Game.getInstance().getCharacter().y+25, 65, 60);
+				//g.drawRect(Game.getInstance().getCharacter().x+40,Game.getInstance().getCharacter().y+25, 65, 60);
 			}
 		}
 		
@@ -133,6 +134,18 @@ public class GraphicPanel extends JPanel {
 			else {
 				//g.drawRect(Game.getInstance().getLizards().get(i).x+90,Game.getInstance().getLizards().get(i).y+80, 40, 40);
 				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
+			}
+		}
+		
+		// DISEGNO I NEMICI DEMON TO DO
+		for(int i = 0; i<Game.getInstance().getDemons().size();++i) {
+			if(Game.getInstance().getDemons().get(i).isRight) {
+				//g.drawRect(Game.getInstance().getDemons().get(i).x+60,Game.getInstance().getDemons().get(i).y+80, 35, 60);
+				g.drawImage(demonanimations.get(i).getCurrentImage(),Game.getInstance().getDemons().get(i).x,Game.getInstance().getDemons().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
+			}
+			else {
+				//g.drawRect(Game.getInstance().getDemons().get(i).x+105,Game.getInstance().getDemons().get(i).y+80, 35, 60);
+				g.drawImage(demonanimations.get(i).getCurrentImage(),Game.getInstance().getDemons().get(i).x,Game.getInstance().getDemons().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
 			}
 		}
 		
@@ -174,6 +187,14 @@ public class GraphicPanel extends JPanel {
 				lizardanimations.get(i).setCurrentAnimation(false);
 			}
 		}
+		for(int i = 0; i<Game.getInstance().getDemons().size();++i) {
+			if(Game.getInstance().getDemons().get(i).isRight) {
+				demonanimations.get(i).setCurrentAnimation(true);
+			}
+			else {
+				demonanimations.get(i).setCurrentAnimation(false);
+			}
+		}
 	}
 	
 	public void update() {
@@ -182,6 +203,9 @@ public class GraphicPanel extends JPanel {
 		}
 		for(int i = 0; i<lizardanimations.size();++i) {
 			lizardanimations.get(i).update();
+		}
+		for(int i = 0; i<demonanimations.size();++i) {
+			demonanimations.get(i).update();
 		}
 		myCharacteranimations.update();
 		repaint();

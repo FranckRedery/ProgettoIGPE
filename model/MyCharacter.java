@@ -11,6 +11,7 @@ public class MyCharacter {
 	public  int speed; 
 	public  int life;
 	public boolean invulnerability = false;
+	public boolean right = true;
 
 
 	public MyCharacter() {
@@ -21,16 +22,16 @@ public class MyCharacter {
 	}
 	
 	public  Rectangle getRectangle() {
-		Rectangle r = new Rectangle(x+30, y+23, 35, 55);
+		Rectangle r = new Rectangle(x+37, y+23, 20, 55);
 		return r;
 	}
 	
 	public Rectangle attackRight() {
-		Rectangle r = new Rectangle(x+60,y+25,40,60);
+		Rectangle r = new Rectangle(x+40,y+25,65,60);
 		return r;
 	}
 	public Rectangle attackLeft() {
-		Rectangle r = new Rectangle(x,y+25,40,60);
+		Rectangle r = new Rectangle(x-5,y+25,65,60);
 		return r;
 	}
 }

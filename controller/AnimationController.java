@@ -31,7 +31,7 @@ public class AnimationController extends KeyAdapter {
 			System.exit(0);
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_P) {
+		if(e.getKeyCode() == KeyEvent.VK_P && !Game.getInstance().gameOver()) {
 			if(Game.getInstance().isPause()) {
 				Game.getInstance().setPause(false);
 			}
@@ -48,6 +48,7 @@ public class AnimationController extends KeyAdapter {
 					if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() ) {
 						Game.getInstance().setActionInProgress(true);
 						Game.getInstance().moveLeft();
+						Game.getInstance().getCharacter().right = false;
 						panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
 					}			
 				break;
@@ -56,14 +57,28 @@ public class AnimationController extends KeyAdapter {
 				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight()) {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().moveRight();
+					Game.getInstance().getCharacter().right = true;
 					panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
 				}		
 				break;
 
+			case KeyEvent.VK_UP:
+				if(!Game.getInstance().isActionInProgress()) {
+					Game.getInstance().setActionInProgress(true);
+					Game.getInstance().setJumpUP(true);
+					if(Game.getInstance().getCharacter().right) {
+						panel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
+					}
+					else {
+						panel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
+					}
+				}		
+				
 			case KeyEvent.VK_D : 
 				if(!Game.getInstance().isActionInProgress()) {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpRight(true);
+					Game.getInstance().getCharacter().right = true;
 					panel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
 				}
 				break;
@@ -72,6 +87,7 @@ public class AnimationController extends KeyAdapter {
 				if(!Game.getInstance().isActionInProgress()) {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpLeft(true);
+					Game.getInstance().getCharacter().right = false;
 					panel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
 				}
 				break;

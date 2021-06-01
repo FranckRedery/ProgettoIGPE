@@ -14,13 +14,13 @@ public class lizardAnimations {
 	public static final int WALK_LEFT = 1;
 	public static final int WALK_RIGHT = 2;
 	
-	private HashMap<Integer, smallDragonAnimation> animations;
-	private smallDragonAnimation currentAnimation;
+	private HashMap<Integer, EnemyAnimation> animations;
+	private EnemyAnimation currentAnimation;
 
 	public lizardAnimations() {
-		animations = new HashMap<Integer, smallDragonAnimation>();
-		animations.put(WALK_LEFT, new smallDragonAnimation(getResources("enemy/lizard/leftWalk")));
-		animations.put(WALK_RIGHT, new smallDragonAnimation(getResources("enemy/lizard/rightWalk")));
+		animations = new HashMap<Integer, EnemyAnimation>();
+		animations.put(WALK_LEFT, new EnemyAnimation(getResources("enemy/lizard/leftWalk")));
+		animations.put(WALK_RIGHT, new EnemyAnimation(getResources("enemy/lizard/rightWalk")));
 		currentAnimation = animations.get(WALK_RIGHT);
 	}
 

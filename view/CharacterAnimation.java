@@ -31,13 +31,21 @@ public class CharacterAnimation {
 					Game.getInstance().jumpRightDOWN();
 				}
 			}
-			else if(Game.getInstance().isJumpLeft()) {
+			if(Game.getInstance().isJumpLeft()) {
 				if(index < 5) {
 					Game.getInstance().jumpLeftUP();
 				}
 				else if(index > 5){
 					Game.getInstance().jumpLeftDOWN();
 				}	
+			}
+			if(Game.getInstance().isJumpUP()) {
+				if(index < 2) {
+					Game.getInstance().jumpUP();
+				}
+				else if(index > 2){
+					Game.getInstance().jumpDOWN();
+				}
 			}
 			index++;
 		}
@@ -46,6 +54,7 @@ public class CharacterAnimation {
 			Game.getInstance().setActionInProgress(false);
 			Game.getInstance().setJumpRight(false);
 			Game.getInstance().setJumpLeft(false);
+			Game.getInstance().setJumpUP(false);
 			index = 0;
 			return false;
 		}

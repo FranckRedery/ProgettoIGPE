@@ -7,7 +7,7 @@ public class fireAttack {
 	public int x;
 	public int y = 810;
 	public boolean isRight;
-	public int speed = 7;
+	public int speed = 15;
 	
 	
 	public fireAttack(int x, boolean right) {
