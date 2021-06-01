@@ -17,7 +17,7 @@ public class smallDragonAnimations {
 	private HashMap<Integer, smallDragonAnimation> animations;
 	private smallDragonAnimation currentAnimation;
 
-	smallDragonAnimations() {
+	public smallDragonAnimations() {
 		animations = new HashMap<Integer, smallDragonAnimation>();
 		animations.put(WALK_LEFT, new smallDragonAnimation(getResources("enemy/smallDragon/leftWalk")));
 		animations.put(WALK_RIGHT, new smallDragonAnimation(getResources("enemy/smallDragon/rightWalk")));
@@ -39,7 +39,7 @@ public class smallDragonAnimations {
 		
 	}
 
-	void setCurrentAnimation(boolean right) {
+	public void setCurrentAnimation(boolean right) {
 		if(right) {
 			currentAnimation = animations.get(WALK_RIGHT);
 		}

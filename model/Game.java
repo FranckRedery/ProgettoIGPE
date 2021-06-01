@@ -60,12 +60,18 @@ public class Game {
 	}
 	
 	public void spawnSmallDragonLeft(int x) {
+		smallDragonAnimations animazione = new smallDragonAnimations();
+		animazione.setCurrentAnimation(true);
+		GraphicPanel.smallDragonanimations.add(animazione);
 		smallDragon drake = new smallDragon(true,x);
 		liveEnemies++;
 		smalldragons.add(drake);
 	}
 	
 	public void spawnSmallDragonRight(int x) {
+		smallDragonAnimations animazione = new smallDragonAnimations();
+		animazione.setCurrentAnimation(false);
+		GraphicPanel.smallDragonanimations.add(animazione);
 		smallDragon drake = new smallDragon(false,x);
 		liveEnemies++;
 		smalldragons.add(drake);
@@ -99,12 +105,18 @@ public class Game {
 	}
 	
 	public void spawnLizardLeft(int x) {
+		lizardAnimations animation = new lizardAnimations();
+		animation.setCurrentAnimation(true);
+		GraphicPanel.lizardanimations.add(animation);	
 		lizard liz = new lizard(true,x);
 		liveEnemies++;
-		lizards.add(liz);
+		lizards.add(liz);	
 	}
 	
 	public void spawnLizardRight(int x) {
+		lizardAnimations animation = new lizardAnimations();
+		animation.setCurrentAnimation(false);
+		GraphicPanel.lizardanimations.add(animation);	
 		lizard liz = new lizard(false,x);
 		liveEnemies++;
 		lizards.add(liz);

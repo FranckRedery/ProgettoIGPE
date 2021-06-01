@@ -22,25 +22,26 @@ public class CharacterAnimation {
 	
 	public boolean update() {
 		
-		if(Game.getInstance().isJumpRight()) {
-			if(index < 5) {
-				Game.getInstance().jumpRightUP();
+		if(!Game.getInstance().isPause()) {
+			if(Game.getInstance().isJumpRight()) {
+				if(index < 5) {
+					Game.getInstance().jumpRightUP();
+				}
+				else if(index > 5){
+					Game.getInstance().jumpRightDOWN();
+				}
 			}
-			else if(index > 5){
-				Game.getInstance().jumpRightDOWN();
+			else if(Game.getInstance().isJumpLeft()) {
+				if(index < 5) {
+					Game.getInstance().jumpLeftUP();
+				}
+				else if(index > 5){
+					Game.getInstance().jumpLeftDOWN();
+				}	
 			}
-		}
-		else if(Game.getInstance().isJumpLeft()) {
-			if(index < 5) {
-				Game.getInstance().jumpLeftUP();
-			}
-			else if(index > 5){
-				Game.getInstance().jumpLeftDOWN();
-			}	
+			index++;
 		}
 		
-		
-		index++;
 		if(index >= images.size()) { 
 			Game.getInstance().setActionInProgress(false);
 			Game.getInstance().setJumpRight(false);

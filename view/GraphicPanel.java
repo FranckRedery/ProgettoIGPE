@@ -33,7 +33,6 @@ public class GraphicPanel extends JPanel {
 	private Image leftFireAttack;
 	private Image rightFireAttack;
 	private Image tombstone;
-	private int enemySpawned = 0;
 	private int contInvulnerabilityFrames = 0;
 
 	public GraphicPanel() {
@@ -119,7 +118,6 @@ public class GraphicPanel extends JPanel {
 			g.drawString("Game paused" , 360, 450);
 		}
 		
-		resize();
 		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
 		for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
 			//g.drawRect(Game.getInstance().getSmalldragons().get(i).x+25,Game.getInstance().getSmalldragons().get(i).y+40, 50, 20);
@@ -188,36 +186,5 @@ public class GraphicPanel extends JPanel {
 		myCharacteranimations.update();
 		repaint();
 	}
-	
-	public void resize() {
-		while(smallDragonanimations.size() < Game.getInstance().getSmalldragons().size()) {
-			smallDragonAnimations animazione = new smallDragonAnimations();
-			// nemico che spawna a sx
-			if(enemySpawned%2 == 0) {
-				animazione.setCurrentAnimation(true);
-			}
-			// nemico che spawna a dx
-			else {
-				animazione.setCurrentAnimation(false);
-			}
-			enemySpawned++;
-			smallDragonanimations.add(animazione);
-		}
-		
-		while(lizardanimations.size() < Game.getInstance().getLizards().size()) {
-			lizardAnimations anim = new lizardAnimations();
-			if(enemySpawned%2 == 0) {
-				anim.setCurrentAnimation(true);
-			}
-			// nemico che spawna a dx
-			else {
-				anim.setCurrentAnimation(false);
-			}
-			enemySpawned++;
-			lizardanimations.add(anim);	
-		}
-	}
-	
-	
 }
 

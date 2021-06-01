@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Random;
+
 import application.controller.AnimationController;
 import application.model.Game;
 
@@ -16,25 +18,35 @@ public class GameLoop extends Thread{
 		super.run();
 		while(true) {
 			try {
+				Random random = new Random();
 				if(Game.getInstance().getKills() == 8) {
 					Game.getInstance().setRound(2);
 				}
+				if(Game.getInstance().getKills() == 20) {
+					Game.getInstance().setRound(3);
+				}
 				// deve sempre prima spawnare a sx e poi a dx altrimenti l'animazione iniziale viene settata al contrario
 				if(Game.getInstance().getRound() == 1) {
-					if(Game.getInstance().getLiveEnemies() == 0) {
-						Game.getInstance().spawnSmallDragonLeft(-200);
-						Game.getInstance().spawnSmallDragonRight(1005);
-						Game.getInstance().spawnSmallDragonLeft(-300);
-						Game.getInstance().spawnSmallDragonRight(1305);
+					if(Game.getInstance().getLiveEnemies() < 4) {
+						if(random.nextInt(2) == 0) {
+							Game.getInstance().spawnSmallDragonLeft(random.nextInt(700)-1000);
+						}
+						else {
+							Game.getInstance().spawnSmallDragonRight(random.nextInt(300)+1000);
+						}
 					}
 				}
 				
 				if(Game.getInstance().getRound() == 2) {
-					if(Game.getInstance().getLiveEnemies() == 0) {
-						Game.getInstance().spawnSmallDragonLeft(-200);
-						Game.getInstance().spawnSmallDragonRight(1005);
-						Game.getInstance().spawnLizardLeft(-100);
-						Game.getInstance().spawnLizardRight(1205);
+					if(Game.getInstance().getLiveEnemies() < 5) {
+						if(random.nextInt(2) == 0) {
+							Game.getInstance().spawnSmallDragonLeft(random.nextInt(700)-1000);
+							Game.getInstance().spawnLizardRight(random.nextInt(500)+1000);
+						}
+						else {
+							Game.getInstance().spawnSmallDragonRight(random.nextInt(300)+1000);
+							Game.getInstance().spawnLizardLeft(random.nextInt(500)-1000);
+						}
 					}
 				}
 				
@@ -56,7 +68,7 @@ public class GameLoop extends Thread{
 				
 				// se sono stato attaccato e metto in pausa, l'invulnerabilità tolta la pausa non deve scomparire subito ! 
 				if(Invulnerability != 0 && Game.getInstance().isPause()) {
-					Invulnerability = System.currentTimeMillis();
+					Invulnerability = System.currentTimeMillis()-Invulnerability;
 				}
 				
 				if(Invulnerability == 0 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
