@@ -28,7 +28,11 @@ public class GameLoop extends Thread{
 				if(Game.getInstance().getKills() == 40) {
 					Game.getInstance().setRound(4);
 				}
-				// deve sempre prima spawnare a sx e poi a dx altrimenti l'animazione iniziale viene settata al contrario
+				if(Game.getInstance().getKills() == 60) {
+					Game.getInstance().setRound(5);
+				}
+				
+				
 				if(Game.getInstance().getRound() == 1) {
 					
 					if(Game.getInstance().getLiveEnemies() < 1) {
@@ -69,6 +73,17 @@ public class GameLoop extends Thread{
 					}
 				}
 				
+				if(Game.getInstance().getRound() == 4 && Game.getInstance().getLiveEnemies()<3) {
+					Game.getInstance().spawnSmallDragonRight(random.nextInt(100)+1000);
+					Game.getInstance().spawnSmallDragonLeft(random.nextInt(900)-1000);
+					Game.getInstance().spawnSmallDragonRight(random.nextInt(900)+1000);
+					Game.getInstance().spawnDemonRight(random.nextInt(900)+1000);
+					Game.getInstance().spawnDemonLeft(random.nextInt(100)-1000);
+					Game.getInstance().spawnLizardRight(random.nextInt(700)+1000);
+					Game.getInstance().spawnMedusaLeft(-500);
+					Game.getInstance().spawnMedusaRight(1500);
+				}
+				
 				
 				if(Game.getInstance().getCharacter().life < 5 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
 					Game.getInstance().spawnHeart(Game.getInstance().getRound());
@@ -80,6 +95,7 @@ public class GameLoop extends Thread{
 					Game.getInstance().lizardMove();
 					Game.getInstance().heartTaken();
 					Game.getInstance().demonMove();
+					Game.getInstance().medusaMove();
 				}
 				
 				if(!Game.getInstance().isPause()) {

@@ -12,6 +12,7 @@ import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -24,10 +25,11 @@ import application.model.MyCharacter;
 public class GraphicPanel extends JPanel {
 
 	private static final long serialVersionUID = 4467360867545965264L;
-	private myCharacterAnimations myCharacteranimations = new myCharacterAnimations();
+	private static myCharacterAnimations myCharacteranimations = new myCharacterAnimations();
 	public static ArrayList<smallDragonAnimations> smallDragonanimations = new ArrayList<smallDragonAnimations>();
 	public static ArrayList<lizardAnimations> lizardanimations = new ArrayList<lizardAnimations>();
 	public static ArrayList<DemonAnimations> demonanimations = new ArrayList<DemonAnimations>();
+	public static ArrayList<MedusaAnimations> medusaAnimations = new ArrayList<MedusaAnimations>();
 	private Image heart;
 	private Image floor;
 	private Image Background;
@@ -65,11 +67,13 @@ public class GraphicPanel extends JPanel {
 		// PER OGNI NEMICO O PERSONAGGIO DA INSERIRE VANNO CREATE DUE CLASSI MOLTO SIMILI A CHARACTERANIMATIONS E MYCHARACTERANIMATIONS
 		
 		super.paintComponent(g);
+		//DISEGNO IL BACKGROUND DEL "CIELO" 
 		g.drawImage(Background,0,0,1920,1080,null);
+		
 		// DISEGNO IL PAVIMENTO
 		for(int i = 0 ; i<20;++i) {
 			for(int j = 0; j<3;++j) {
-				g.drawImage(floor,i*Settings.BLOCK_DIM/2,883+j*50,Settings.BLOCK_DIM/2,Settings.BLOCK_DIM/2,null);
+				g.drawImage(floor,i*50,883+j*50,50,50,null);
 			}
 		}
 		// DISEGNO I CUORI
@@ -121,32 +125,22 @@ public class GraphicPanel extends JPanel {
 		
 		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
 		for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
-			//g.drawRect(Game.getInstance().getSmalldragons().get(i).x+25,Game.getInstance().getSmalldragons().get(i).y+40, 50, 20);
 			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.getInstance().getSmalldragons().get(i).x,Game.getInstance().getSmalldragons().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
 		}
 		
 		// DISEGNO I NEMICI LIZARD
 		for(int i = 0; i<Game.getInstance().getLizards().size();++i) {
-			if(Game.getInstance().getLizards().get(i).isRight) {
-				//g.drawRect(Game.getInstance().getLizards().get(i).x+70,Game.getInstance().getLizards().get(i).y+80, 40, 40);
 				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
-			}
-			else {
-				//g.drawRect(Game.getInstance().getLizards().get(i).x+90,Game.getInstance().getLizards().get(i).y+80, 40, 40);
-				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
-			}
 		}
 		
-		// DISEGNO I NEMICI DEMON TO DO
+		// DISEGNO I NEMICI DEMON
 		for(int i = 0; i<Game.getInstance().getDemons().size();++i) {
-			if(Game.getInstance().getDemons().get(i).isRight) {
-				//g.drawRect(Game.getInstance().getDemons().get(i).x+60,Game.getInstance().getDemons().get(i).y+80, 35, 60);
 				g.drawImage(demonanimations.get(i).getCurrentImage(),Game.getInstance().getDemons().get(i).x,Game.getInstance().getDemons().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
-			}
-			else {
-				//g.drawRect(Game.getInstance().getDemons().get(i).x+105,Game.getInstance().getDemons().get(i).y+80, 35, 60);
-				g.drawImage(demonanimations.get(i).getCurrentImage(),Game.getInstance().getDemons().get(i).x,Game.getInstance().getDemons().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
-			}
+		}
+		
+		// DISEGNO I NEMICI MEDUSA
+		for(int i = 0; i<Game.getInstance().getMedusa().size();++i) {
+				g.drawImage(medusaAnimations.get(i).getCurrentImage(),Game.getInstance().getMedusa().get(i).x,Game.getInstance().getMedusa().get(i).y,Settings.BLOCK_DIM,Settings.BLOCK_DIM,null);
 		}
 		
 		//DISEGNO GLI ATTACCHI DEI PICCOLI DRAGHI
@@ -169,8 +163,10 @@ public class GraphicPanel extends JPanel {
 		
 	}
 	
-	public void updateAnimation(int type) {
-		myCharacteranimations.changeAnimation(type);
+	public static void updateAnimation(int type) {
+		if(type != -1) {
+			myCharacteranimations.changeAnimation(type);
+		}
 		for(int i = 0 ; i<Game.getInstance().getSmalldragons().size();++i){
 			if(Game.getInstance().getSmalldragons().get(i).isRight) {
 				smallDragonanimations.get(i).setCurrentAnimation(true);
@@ -195,6 +191,15 @@ public class GraphicPanel extends JPanel {
 				demonanimations.get(i).setCurrentAnimation(false);
 			}
 		}
+		
+		for(int i = 0; i<Game.getInstance().getMedusa().size();++i) {
+			if(Game.getInstance().getMedusa().get(i).isRight) {
+				medusaAnimations.get(i).setCurrentAnimation(true);
+			}
+			else {
+				medusaAnimations.get(i).setCurrentAnimation(false);
+			}
+		}
 	}
 	
 	public void update() {
@@ -207,8 +212,10 @@ public class GraphicPanel extends JPanel {
 		for(int i = 0; i<demonanimations.size();++i) {
 			demonanimations.get(i).update();
 		}
+		for(int i = 0; i<medusaAnimations.size();++i) {
+			medusaAnimations.get(i).update();
+		}
 		myCharacteranimations.update();
 		repaint();
 	}
 }
-

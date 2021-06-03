@@ -17,11 +17,11 @@ public class DemonAnimations {
 	private HashMap<Integer, EnemyAnimation> animations;
 	private EnemyAnimation currentAnimation;
 
-	public DemonAnimations() {
+	public DemonAnimations(boolean right) {
 		animations = new HashMap<Integer, EnemyAnimation>();
 		animations.put(WALK_LEFT, new EnemyAnimation(getResources("enemy/demon/leftWalk")));
 		animations.put(WALK_RIGHT, new EnemyAnimation(getResources("enemy/demon/rightWalk")));
-		currentAnimation = animations.get(WALK_RIGHT);
+		setCurrentAnimation(right);
 	}
 
 	Image getCurrentImage() {		

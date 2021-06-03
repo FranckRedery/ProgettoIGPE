@@ -17,11 +17,11 @@ public class lizardAnimations {
 	private HashMap<Integer, EnemyAnimation> animations;
 	private EnemyAnimation currentAnimation;
 
-	public lizardAnimations() {
+	public lizardAnimations(boolean right) {
 		animations = new HashMap<Integer, EnemyAnimation>();
 		animations.put(WALK_LEFT, new EnemyAnimation(getResources("enemy/lizard/leftWalk")));
 		animations.put(WALK_RIGHT, new EnemyAnimation(getResources("enemy/lizard/rightWalk")));
-		currentAnimation = animations.get(WALK_RIGHT);
+		setCurrentAnimation(right);
 	}
 
 	Image getCurrentImage() {		
