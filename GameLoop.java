@@ -19,7 +19,7 @@ public class GameLoop extends Thread{
 		while(true) {
 			try {
 				Random random = new Random();
-				if(Game.getInstance().getKills() == 8) {
+				if(Game.getInstance().getKills() == 4) {
 					Game.getInstance().setRound(2);
 				}
 				if(Game.getInstance().getKills() == 20) {
@@ -32,6 +32,27 @@ public class GameLoop extends Thread{
 					Game.getInstance().setRound(5);
 				}
 				
+				
+				if(Game.getInstance().getRound() == 5 && Game.getInstance().getLiveEnemies() == 0) {
+					Game.getInstance().spawnDragon();
+				}
+				if(Game.getInstance().getRound() == 5 && Game.getInstance().getLiveEnemies() == 1) {
+					Game.getInstance().spawnSmallDragonLeft(-300);
+					Game.getInstance().spawnSmallDragonRight(1050);
+					Game.getInstance().spawnSmallDragonLeft(-450);
+					Game.getInstance().spawnSmallDragonRight(1250);
+					Game.getInstance().spawnMedusaLeft(-500);
+					Game.getInstance().spawnMedusaRight(1500);
+				}
+				
+				if(Game.getInstance().getDragon().life == 0 && Game.liveEnemies > 0) {
+					for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
+						Game.getInstance().getSmalldragons().remove(i);
+					}
+					if(Game.getInstance().getSmalldragons().size() == 0) {
+						Game.liveEnemies = -1;
+					}
+				}
 				
 				if(Game.getInstance().getRound() == 1) {
 					
@@ -96,6 +117,9 @@ public class GameLoop extends Thread{
 					Game.getInstance().heartTaken();
 					Game.getInstance().demonMove();
 					Game.getInstance().medusaMove();
+					if(Game.getInstance().getRound() == 5) {
+						Game.getInstance().moveDragon();
+					}
 				}
 				
 				if(!Game.getInstance().isPause()) {

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import application.Settings;
 import application.view.DemonAnimations;
+import application.view.DragonAnimations;
 import application.view.GraphicPanel;
 import application.view.MedusaAnimations;
 import application.view.lizardAnimations;
@@ -21,6 +22,7 @@ public class Game {
 	private ArrayList<Medusa> meduse;
 	private ArrayList<fireAttack> fireAttack;
 	private ArrayList<heart> hearts;
+	private Dragon dragon;
 	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
@@ -29,7 +31,7 @@ public class Game {
 	private boolean pause = false;
 	private int kills = 0;
 	private int round = 1;
-	private int liveEnemies = 0;
+	public static int liveEnemies = 0;
 	
 	private Game() {
 		myCharacter = new MyCharacter();
@@ -39,9 +41,11 @@ public class Game {
 		meduse = new ArrayList<Medusa>();
 		fireAttack = new ArrayList<fireAttack>();
 		hearts = new ArrayList<heart>();
+		dragon = new Dragon(-300);
 		GraphicPanel.smallDragonanimations = new ArrayList<smallDragonAnimations>();
 		GraphicPanel.lizardanimations = new ArrayList<lizardAnimations>();	
-		GraphicPanel.demonanimations = new ArrayList<DemonAnimations>();		
+		GraphicPanel.demonanimations = new ArrayList<DemonAnimations>();
+		liveEnemies = 0;
 	}
 	
 	public static Game getInstance() {
@@ -213,7 +217,7 @@ public class Game {
 	public void medusaMove() {
 		for(int i =0 ; i<meduse.size();++i) {
 			if(!JumpLeft && !JumpRight && !JumpUP) {
-				if(myCharacter.x < meduse.get(i).x + 20) {
+				if(myCharacter.x < meduse.get(i).x) {
 					meduse.get(i).isRight = false;
 				}
 				else {
@@ -227,6 +231,48 @@ public class Game {
 					meduse.get(i).x -= meduse.get(i).speed;
 				}
 			}
+		}
+	}
+	
+	public void spawnDragon() {
+		
+		GraphicPanel.dragonAnimations.setCurrentAnimation(true);
+		liveEnemies++;
+		GraphicPanel.updateAnimation(-1);
+		
+	}
+	
+	public void moveDragon() {
+		
+		if(dragon.life == 0) {
+			return;
+		}
+		
+		Random rand = new Random();
+		if(rand.nextInt(100) == 1 && !dragon.run && Math.abs(dragon.x - myCharacter.x) > 300 ) {
+			dragon.run = true;
+			dragon.speed = 20;
+		}
+		if(dragon.run == true && (dragon.x > 900 || dragon.x < -100)){
+			dragon.run = false;
+			dragon.speed = 2;
+		}
+		
+		if(!dragon.run && myCharacter.x < dragon.x +100 && !JumpLeft && !JumpRight) {
+			dragon.isRight = false;
+			GraphicPanel.updateAnimation(-1);
+			dragon.x -= dragon.speed;
+		}
+		else if(!dragon.run && myCharacter.x > dragon.x && !JumpLeft && !JumpRight) {
+			dragon.isRight = true;
+			GraphicPanel.updateAnimation(-1);
+			dragon.x += dragon.speed;
+		}
+		if(dragon.run && dragon.isRight) {
+			dragon.x += dragon.speed;
+		}
+		else if(dragon.run && !dragon.isRight) {
+			dragon.x -= dragon.speed;
 		}
 	}
 	
@@ -365,6 +411,12 @@ public class Game {
 				return true;
 			}
 		}
+		if(dragon.life > 0) {
+			if(myCharacter.getRectangle().intersects(dragon.getRectangle())) {
+				myCharacter.life--;
+				return true;
+			}
+		}
 		return false;
 	}
 	
@@ -401,6 +453,14 @@ public class Game {
 				kills++;
 			}
 		}
+		if(dragon.life > 0) {
+			if(myCharacter.attackRight().intersects(dragon.getRectangle())) {
+				dragon.life--;
+				if(dragon.life == 0) {
+					liveEnemies--;
+				}
+			}
+		}
 	}
 
 	public void myCharAttackLeft() {
@@ -434,6 +494,14 @@ public class Game {
 				GraphicPanel.medusaAnimations.remove(i);
 				liveEnemies--;
 				kills++;
+			}
+		}
+		if(dragon.life > 0) {
+			if(myCharacter.attackLeft().intersects(dragon.getRectangle())) {
+				dragon.life--;
+				if(dragon.life == 0) {
+					liveEnemies--;
+				}
 			}
 		}
 	}
@@ -522,5 +590,9 @@ public class Game {
 
 	public ArrayList<Medusa> getMedusa() {
 		return meduse;
+	}
+
+	public Dragon getDragon() {
+		return dragon;
 	}
 }

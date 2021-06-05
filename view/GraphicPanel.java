@@ -30,12 +30,14 @@ public class GraphicPanel extends JPanel {
 	public static ArrayList<lizardAnimations> lizardanimations = new ArrayList<lizardAnimations>();
 	public static ArrayList<DemonAnimations> demonanimations = new ArrayList<DemonAnimations>();
 	public static ArrayList<MedusaAnimations> medusaAnimations = new ArrayList<MedusaAnimations>();
+	public static DragonAnimations dragonAnimations = new DragonAnimations(true); 
 	private Image heart;
 	private Image floor;
 	private Image Background;
 	private Image leftFireAttack;
 	private Image rightFireAttack;
 	private Image tombstone;
+	private Image dragonLife;
 	private int contInvulnerabilityFrames = 0;
 
 	public GraphicPanel() {
@@ -56,6 +58,7 @@ public class GraphicPanel extends JPanel {
 			leftFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/leftAttack/attackLeft0.png"));
 			rightFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/rightAttack/attackRight0.png"));
 			tombstone = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/tombstone.png"));
+			dragonLife = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/dragonLife.png"));
 		} catch (IOException e) {
 			System.out.println("Can't load map images");
 		}
@@ -67,6 +70,7 @@ public class GraphicPanel extends JPanel {
 		// PER OGNI NEMICO O PERSONAGGIO DA INSERIRE VANNO CREATE DUE CLASSI MOLTO SIMILI A CHARACTERANIMATIONS E MYCHARACTERANIMATIONS
 		
 		super.paintComponent(g);
+		
 		//DISEGNO IL BACKGROUND DEL "CIELO" 
 		g.drawImage(Background,0,0,1920,1080,null);
 		
@@ -143,6 +147,32 @@ public class GraphicPanel extends JPanel {
 				g.drawImage(medusaAnimations.get(i).getCurrentImage(),Game.getInstance().getMedusa().get(i).x,Game.getInstance().getMedusa().get(i).y,Settings.BLOCK_DIM,Settings.BLOCK_DIM,null);
 		}
 		
+		// DISEGNO IL BOSS DRAGON
+		if(Game.getInstance().getRound() == 5) {
+			for(int i = 0; i<Game.getInstance().getDragon().life;++i) {
+				g.setFont(new Font("Fiendish",Font.PLAIN,20));
+				g.setColor(Color.RED);
+				g.drawString("Dragon", 840, 100);
+				g.drawImage(dragonLife,780+i*37 ,90 ,70 ,70,null);
+			}
+			//new Rectangle(x+25,y+30,38,47);
+			if(Game.getInstance().getDragon().isRight) {
+				//g.drawRect(Game.getInstance().getDragon().x+100,  Game.getInstance().getDragon().y+130, 80,47);
+				g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
+			}
+			else {
+				//g.drawRect(Game.getInstance().getDragon().x+65,  Game.getInstance().getDragon().y+130, 80,47);
+				g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
+			}
+			if(Game.getInstance().getDragon().life == 0) {
+				g.setFont(new Font("Fiendish",Font.PLAIN,30));
+				g.setColor(Color.RED);
+				g.drawString("You Won", 390, 450);
+				g.setFont(new Font("Fiendish",Font.PLAIN,20));
+				g.drawString("Press R to start a new game or Esc to quit", 180,530);
+			}
+		}
+		
 		//DISEGNO GLI ATTACCHI DEI PICCOLI DRAGHI
 		for(int i =0 ; i<Game.getInstance().getFireAttack().size();++i) {
 			if(Game.getInstance().getFireAttack().get(i).isRight) {
@@ -200,6 +230,14 @@ public class GraphicPanel extends JPanel {
 				medusaAnimations.get(i).setCurrentAnimation(false);
 			}
 		}
+		if(Game.getInstance().getRound() == 5) {
+			if(Game.getInstance().getDragon().isRight) {
+				dragonAnimations.setCurrentAnimation(true);
+			}
+			else {
+				dragonAnimations.setCurrentAnimation(false);
+			}
+		}
 	}
 	
 	public void update() {
@@ -216,6 +254,9 @@ public class GraphicPanel extends JPanel {
 			medusaAnimations.get(i).update();
 		}
 		myCharacteranimations.update();
+		if(Game.getInstance().getRound() == 5) {
+			dragonAnimations.update();
+		}
 		repaint();
 	}
 }

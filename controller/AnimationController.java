@@ -27,6 +27,12 @@ public class AnimationController extends KeyAdapter {
 			return;
 		}
 		
+		if(Game.getInstance().getDragon().life == 0 && e.getKeyCode() == KeyEvent.VK_R) {
+			Game.restartGame();
+			panel.repaint();
+			return;
+		}
+		
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			System.exit(0);
 		}
@@ -49,7 +55,7 @@ public class AnimationController extends KeyAdapter {
 						Game.getInstance().setActionInProgress(true);
 						Game.getInstance().moveLeft();
 						Game.getInstance().getCharacter().right = false;
-						panel.updateAnimation(myCharacterAnimations.WALK_LEFT);
+						GraphicPanel.updateAnimation(myCharacterAnimations.WALK_LEFT);
 					}			
 				break;
 
@@ -58,7 +64,7 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().moveRight();
 					Game.getInstance().getCharacter().right = true;
-					panel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
+					GraphicPanel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
 				}		
 				break;
 
@@ -67,10 +73,10 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpUP(true);
 					if(Game.getInstance().getCharacter().right) {
-						panel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
+						GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
 					}
 					else {
-						panel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
+						GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
 					}
 				}		
 				
@@ -79,7 +85,7 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpRight(true);
 					Game.getInstance().getCharacter().right = true;
-					panel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
+					GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
 				}
 				break;
 			
@@ -88,7 +94,7 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpLeft(true);
 					Game.getInstance().getCharacter().right = false;
-					panel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
+					GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
 				}
 				break;
 				
@@ -97,11 +103,11 @@ public class AnimationController extends KeyAdapter {
 				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isActionInProgress()) {
 					Game.getInstance().setActionInProgress(true);
 					if(myCharacterAnimations.isRight) {
-						panel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
+						GraphicPanel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
 						Game.getInstance().myCharAttackRight();
 					}
 					else {
-						panel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
+						GraphicPanel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
 						Game.getInstance().myCharAttackLeft();
 					}
 				}
@@ -109,10 +115,10 @@ public class AnimationController extends KeyAdapter {
 
 			default:
 				if(myCharacterAnimations.isRight) {
-					panel.updateAnimation(myCharacterAnimations.IDLE_RIGHT);
+					GraphicPanel.updateAnimation(myCharacterAnimations.IDLE_RIGHT);
 				}
 				else {
-					panel.updateAnimation(myCharacterAnimations.IDLE_LEFT);
+					GraphicPanel.updateAnimation(myCharacterAnimations.IDLE_LEFT);
 				}
 				break;
 			}
