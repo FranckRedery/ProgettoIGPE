@@ -133,7 +133,9 @@ public class GameLoop extends Thread{
 				if(Invulnerability == 0 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
 					// se vengo attaccato divento invulnerabile
 					if(Game.getInstance().myCharAttacked()) {
-						Game.myCharacterHitted.start();
+						if(Settings.audio) {
+							Game.myCharacterHitted.start();
+						}
 						Invulnerability = System.nanoTime();
 						Game.getInstance().getCharacter().invulnerability = true;
 					}
@@ -148,10 +150,12 @@ public class GameLoop extends Thread{
 					Invulnerability = System.nanoTime();
 				}
 				
+				// passati 2 secondi l'invulnerabilità sparisce 
 				if((System.nanoTime() - AnimationController.drakeInvuln)/1000000000 == 2 && !Game.getInstance().isPause()) {
 					AnimationController.drakeInvuln = 0;
 					Game.getInstance().getDragon().invulnerability = false;
 				}
+				// se si è in pausa e passano i 2 secondi si resetta il timer dell'invulnerabilità
 				else if(AnimationController.drakeInvuln != 0 && Game.getInstance().isPause()) {
 					AnimationController.drakeInvuln = System.nanoTime();
 				}

@@ -38,6 +38,7 @@ public class Game {
 	private Audio kill = new Audio("kill.wav");
 	private Audio roar = new Audio("roar.wav");
 	private Audio dragonDead = new Audio("dragonDead.wav");
+	private Audio fireAttackAudio = new Audio("fireAttack.wav");
 	public static Audio myCharacterHitted = new Audio("myCharacterHitted.wav");
 
 	
@@ -53,9 +54,11 @@ public class Game {
 		GraphicPanel.smallDragonanimations = new ArrayList<smallDragonAnimations>();
 		GraphicPanel.lizardanimations = new ArrayList<lizardAnimations>();	
 		GraphicPanel.demonanimations = new ArrayList<DemonAnimations>();
+		GraphicPanel.medusaAnimations = new ArrayList<MedusaAnimations>();
 		liveEnemies = 0;
 		myCharacterHitted.reduceVolume();
 		heartTaken.reduceVolume();
+		fireAttackAudio.reduceVolume();
 	}
 	
 	public static Game getInstance() {
@@ -119,10 +122,13 @@ public class Game {
 			// gli attacchi non voglio che siano generati quando il personaggio ed il nemico si trovano troppo vicini
 			// altrimenti sarebbero troppo difficili da dodgare
 			Random random = new Random();
-			int r = random.nextInt(380);
-			if(r == 1 && Math.abs(smalldragons.get(i).x- myCharacter.x) > 300) {
+			int r = random.nextInt(350);
+			if(r == 1 && Math.abs(smalldragons.get(i).x- myCharacter.x) > 300 && smalldragons.get(i).x > 0 && smalldragons.get(i).x<1000) {
 				fireAttack attacco = new fireAttack(smalldragons.get(i).x ,smalldragons.get(i).isRight);
 				fireAttack.add(attacco);
+				if(Settings.audio) {
+					fireAttackAudio.restart();
+				}
 			}
 		}
 	}
@@ -279,11 +285,15 @@ public class Game {
 			dragon.x += dragon.speed;
 		}
 		if(dragon.run && dragon.isRight) {
-			roar.start();
+			if(Settings.audio) {
+				roar.start();
+			}
 			dragon.x += dragon.speed;
 		}
 		else if(dragon.run && !dragon.isRight) {
-			roar.start();
+			if(Settings.audio) {
+				roar.start();
+			}
 			dragon.x -= dragon.speed;
 		}
 	}
@@ -331,7 +341,9 @@ public class Game {
 	public void heartTaken() {
 		for(int i = 0; i<hearts.size();++i) {
 			if(myCharacter.getRectangle().intersects(hearts.get(i).getRectangle())) {
-				heartTaken.start();
+				if(Settings.audio) {
+					heartTaken.start();
+				}
 				myCharacter.life++;
 				hearts.remove(i);
 			}
@@ -437,7 +449,9 @@ public class Game {
 	public boolean myCharAttackRight() {
 		for(int i =0 ; i<smalldragons.size();++i) {
 			if(myCharacter.attackRight().intersects(smalldragons.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				smalldragons.remove(i);
 				GraphicPanel.smallDragonanimations.remove(i);
 				liveEnemies--;
@@ -446,7 +460,9 @@ public class Game {
 		}
 		for(int i = 0; i<lizards.size();++i) {
 			if(myCharacter.attackRight().intersects(lizards.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				lizards.remove(i);
 				GraphicPanel.lizardanimations.remove(i);
 				liveEnemies--;
@@ -455,7 +471,9 @@ public class Game {
 		}
 		for(int i = 0; i<demons.size();++i) {
 			if(myCharacter.attackRight().intersects(demons.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				demons.remove(i);
 				GraphicPanel.demonanimations.remove(i);
 				liveEnemies--;
@@ -464,7 +482,9 @@ public class Game {
 		}
 		for(int i = 0; i<meduse.size();++i) {
 			if(myCharacter.attackRight().intersects(meduse.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				meduse.remove(i);
 				GraphicPanel.medusaAnimations.remove(i);
 				liveEnemies--;
@@ -473,12 +493,15 @@ public class Game {
 		}
 		if(dragon.life > 0) {
 			if(myCharacter.attackRight().intersects(dragon.getRectangle()) && !dragon.invulnerability) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				dragon.life--;
 				if(dragon.life == 0) {
 					liveEnemies--;
-					dragonDead.start();
-					kill.restart();
+					if(Settings.audio) {
+						dragonDead.start();
+					}
 				}
 				else {
 					return true;
@@ -491,7 +514,9 @@ public class Game {
 	public boolean myCharAttackLeft() {
 		for(int i = 0; i<smalldragons.size();++i) {
 			if(myCharacter.attackLeft().intersects(smalldragons.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				smalldragons.remove(i);
 				GraphicPanel.smallDragonanimations.remove(i);
 				liveEnemies--;
@@ -500,7 +525,9 @@ public class Game {
 		}
 		for(int i = 0; i<lizards.size();++i) {
 			if(myCharacter.attackLeft().intersects(lizards.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				lizards.remove(i);
 				GraphicPanel.lizardanimations.remove(i);
 				liveEnemies--;
@@ -509,7 +536,9 @@ public class Game {
 		}
 		for(int i = 0; i<demons.size();++i) {
 			if(myCharacter.attackLeft().intersects(demons.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				demons.remove(i);
 				GraphicPanel.demonanimations.remove(i);
 				liveEnemies--;
@@ -518,7 +547,9 @@ public class Game {
 		}
 		for(int i = 0; i<meduse.size();++i) {
 			if(myCharacter.attackLeft().intersects(meduse.get(i).getRectangle())) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				meduse.remove(i);
 				GraphicPanel.medusaAnimations.remove(i);
 				liveEnemies--;
@@ -527,11 +558,15 @@ public class Game {
 		}
 		if(dragon.life > 0) {
 			if(myCharacter.attackLeft().intersects(dragon.getRectangle())  && !dragon.invulnerability) {
-				kill.restart();
+				if(Settings.audio) {
+					kill.restart();
+				}
 				dragon.life--;
 				if(dragon.life == 0) {
 					liveEnemies--;
-					dragonDead.start();
+					if(Settings.audio) {
+						dragonDead.start();
+					}
 				}
 				else {
 					return true;

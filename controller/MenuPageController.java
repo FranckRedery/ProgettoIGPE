@@ -1,5 +1,6 @@
 package application.controller;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import application.GameLoop;
 import application.Main;
 import application.Settings;
+import application.model.Game;
 import application.resources.audio.Audio;
 import application.view.GraphicPanel;
 import application.view.MenuPage;
@@ -19,8 +21,9 @@ import application.view.SettingsPage;
 public class MenuPageController implements MouseListener {
 
 	private MenuPage menu = new MenuPage();
+	private JFrame gioco;
 	public static JFrame settingsFrame;
-	private Audio gameBackgroundAudio = new Audio("gameBackgroundAudio.wav");
+	public static Audio gameBackgroundAudio = new Audio("gameBackgroundAudio.wav");
 	public static Audio click = new Audio("click.wav");
 	public static Audio mouseEntered = new Audio("mouseEntered.wav");
 	
@@ -37,19 +40,19 @@ public class MenuPageController implements MouseListener {
 			click.start();
 			Main.menuAudio.stop();
 			Main.start.dispose();
-			JFrame f = new JFrame("Gioco");
-			f.setSize(Settings.WINDOW_SIZE,Settings.WINDOW_SIZE);		
+			gioco = new JFrame("Gioco");
+			gioco.setSize(Settings.WINDOW_SIZE,Settings.WINDOW_SIZE);		
 			GraphicPanel gp = new GraphicPanel();
 			AnimationController controller = new AnimationController(gp);
 			gp.addKeyListener(controller);
 			gp.setFocusable(true);
-			f.add(gp);
+			gioco.add(gp);
 			GameLoop gameLoop = new GameLoop(controller);
 			gameLoop.start();
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			f.setLocationRelativeTo(null);
-			f.setUndecorated(true);
-			f.setVisible(true);
+			gioco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			gioco.setLocationRelativeTo(null);
+			gioco.setUndecorated(true);
+			gioco.setVisible(true);
 			gameBackgroundAudio.reduceVolume();
 			gameBackgroundAudio.reduceVolume();
 			gameBackgroundAudio.loop();
