@@ -11,12 +11,14 @@ import javax.swing.JPanel;
 import application.controller.AnimationController;
 import application.controller.MenuPageController;
 import application.model.Game;
+import application.resources.audio.Audio;
 import application.view.GraphicPanel;
 import application.view.MenuPage;
 
 public class Main {
 	
 	public static JFrame start = new JFrame();
+	public static Audio menuAudio = new Audio("menuAudio.wav");
 
 	public static void main(String[] args) {
 
@@ -30,6 +32,8 @@ public class Main {
 			start.setUndecorated(true);
 			start.add(menu);
 			start.setVisible(true);
+			menuAudio.reduceVolume();
+			menuAudio.loop();
+			
 		}
-		
 	}

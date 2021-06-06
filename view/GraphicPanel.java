@@ -38,7 +38,8 @@ public class GraphicPanel extends JPanel {
 	private Image rightFireAttack;
 	private Image tombstone;
 	private Image dragonLife;
-	private int contInvulnerabilityFrames = 0;
+	private int myCharInvulnerabilityFrames = 0;
+	private int drakeInvulnerabilityFrames = 0;
 
 	public GraphicPanel() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -95,19 +96,13 @@ public class GraphicPanel extends JPanel {
 			// DISEGNO IL MIO PERSONAGGIO, NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO 
 			// IN MODO "LAMPEGGIANTE" COSì CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI QUESTO EFFETTO
 			if(Game.getInstance().getCharacter().invulnerability) {
-				if(contInvulnerabilityFrames % 2  == 0) {
+				if(myCharInvulnerabilityFrames % 2  == 0) {
 					g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-					//g.drawRect(Game.getInstance().getCharacter().x+37,Game.getInstance().getCharacter().y+23, 20, 55);
-					//g.drawRect(Game.getInstance().getCharacter().x+40,Game.getInstance().getCharacter().y+25, 65, 60);
-					//g.drawRect(Game.getInstance().getCharacter().x-5,Game.getInstance().getCharacter().y+25, 65, 60);
 				}
-				contInvulnerabilityFrames++;
+				myCharInvulnerabilityFrames++;
 			}
 			else {
 				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				//g.drawRect(Game.getInstance().getCharacter().x+37,Game.getInstance().getCharacter().y+23, 20, 55);
-				//g.drawRect(Game.getInstance().getCharacter().x-5,Game.getInstance().getCharacter().y+25, 65, 60);
-				//g.drawRect(Game.getInstance().getCharacter().x+40,Game.getInstance().getCharacter().y+25, 65, 60);
 			}
 		}
 		
@@ -155,13 +150,13 @@ public class GraphicPanel extends JPanel {
 				g.drawString("Dragon", 840, 100);
 				g.drawImage(dragonLife,780+i*37 ,90 ,70 ,70,null);
 			}
-			//new Rectangle(x+25,y+30,38,47);
-			if(Game.getInstance().getDragon().isRight) {
-				//g.drawRect(Game.getInstance().getDragon().x+100,  Game.getInstance().getDragon().y+130, 80,47);
-				g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
+			if(Game.getInstance().getDragon().invulnerability) {
+				if(drakeInvulnerabilityFrames % 2  == 0) {
+					g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
+				}
+				drakeInvulnerabilityFrames++;
 			}
-			else {
-				//g.drawRect(Game.getInstance().getDragon().x+65,  Game.getInstance().getDragon().y+130, 80,47);
+			else{
 				g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
 			}
 			if(Game.getInstance().getDragon().life == 0) {

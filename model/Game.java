@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import application.Settings;
+import application.resources.audio.Audio;
 import application.view.DemonAnimations;
 import application.view.DragonAnimations;
 import application.view.GraphicPanel;
@@ -23,7 +24,7 @@ public class Game {
 	private ArrayList<fireAttack> fireAttack;
 	private ArrayList<heart> hearts;
 	private Dragon dragon;
-	private static Game game = null;// CON QUESTA TECNICA SI DICE CHE LA CLASSE GAME è SINGLETON CIOè UNICA !
+	private static Game game = null;
 	private boolean JumpRight = false;
 	private boolean JumpLeft = false;
 	private boolean JumpUP = false;
@@ -32,6 +33,13 @@ public class Game {
 	private int kills = 0;
 	private int round = 1;
 	public static int liveEnemies = 0;
+	
+	private Audio heartTaken = new Audio("heartTaken.wav");
+	private Audio kill = new Audio("kill.wav");
+	private Audio roar = new Audio("roar.wav");
+	private Audio dragonDead = new Audio("dragonDead.wav");
+	public static Audio myCharacterHitted = new Audio("myCharacterHitted.wav");
+
 	
 	private Game() {
 		myCharacter = new MyCharacter();
@@ -46,6 +54,8 @@ public class Game {
 		GraphicPanel.lizardanimations = new ArrayList<lizardAnimations>();	
 		GraphicPanel.demonanimations = new ArrayList<DemonAnimations>();
 		liveEnemies = 0;
+		myCharacterHitted.reduceVolume();
+		heartTaken.reduceVolume();
 	}
 	
 	public static Game getInstance() {
@@ -249,7 +259,7 @@ public class Game {
 		}
 		
 		Random rand = new Random();
-		if(rand.nextInt(100) == 1 && !dragon.run && Math.abs(dragon.x - myCharacter.x) > 300 ) {
+		if(rand.nextInt(100) == 1 && !dragon.run && Math.abs(dragon.x - myCharacter.x) > 300) {
 			dragon.run = true;
 			dragon.speed = 20;
 		}
@@ -269,9 +279,11 @@ public class Game {
 			dragon.x += dragon.speed;
 		}
 		if(dragon.run && dragon.isRight) {
+			roar.start();
 			dragon.x += dragon.speed;
 		}
 		else if(dragon.run && !dragon.isRight) {
+			roar.start();
 			dragon.x -= dragon.speed;
 		}
 	}
@@ -319,6 +331,7 @@ public class Game {
 	public void heartTaken() {
 		for(int i = 0; i<hearts.size();++i) {
 			if(myCharacter.getRectangle().intersects(hearts.get(i).getRectangle())) {
+				heartTaken.start();
 				myCharacter.life++;
 				hearts.remove(i);
 			}
@@ -420,9 +433,11 @@ public class Game {
 		return false;
 	}
 	
-	public void myCharAttackRight() {
+	
+	public boolean myCharAttackRight() {
 		for(int i =0 ; i<smalldragons.size();++i) {
 			if(myCharacter.attackRight().intersects(smalldragons.get(i).getRectangle())) {
+				kill.restart();
 				smalldragons.remove(i);
 				GraphicPanel.smallDragonanimations.remove(i);
 				liveEnemies--;
@@ -431,6 +446,7 @@ public class Game {
 		}
 		for(int i = 0; i<lizards.size();++i) {
 			if(myCharacter.attackRight().intersects(lizards.get(i).getRectangle())) {
+				kill.restart();
 				lizards.remove(i);
 				GraphicPanel.lizardanimations.remove(i);
 				liveEnemies--;
@@ -439,6 +455,7 @@ public class Game {
 		}
 		for(int i = 0; i<demons.size();++i) {
 			if(myCharacter.attackRight().intersects(demons.get(i).getRectangle())) {
+				kill.restart();
 				demons.remove(i);
 				GraphicPanel.demonanimations.remove(i);
 				liveEnemies--;
@@ -447,6 +464,7 @@ public class Game {
 		}
 		for(int i = 0; i<meduse.size();++i) {
 			if(myCharacter.attackRight().intersects(meduse.get(i).getRectangle())) {
+				kill.restart();
 				meduse.remove(i);
 				GraphicPanel.medusaAnimations.remove(i);
 				liveEnemies--;
@@ -454,18 +472,26 @@ public class Game {
 			}
 		}
 		if(dragon.life > 0) {
-			if(myCharacter.attackRight().intersects(dragon.getRectangle())) {
+			if(myCharacter.attackRight().intersects(dragon.getRectangle()) && !dragon.invulnerability) {
+				kill.restart();
 				dragon.life--;
 				if(dragon.life == 0) {
 					liveEnemies--;
+					dragonDead.start();
+					kill.restart();
+				}
+				else {
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
-	public void myCharAttackLeft() {
+	public boolean myCharAttackLeft() {
 		for(int i = 0; i<smalldragons.size();++i) {
 			if(myCharacter.attackLeft().intersects(smalldragons.get(i).getRectangle())) {
+				kill.restart();
 				smalldragons.remove(i);
 				GraphicPanel.smallDragonanimations.remove(i);
 				liveEnemies--;
@@ -474,6 +500,7 @@ public class Game {
 		}
 		for(int i = 0; i<lizards.size();++i) {
 			if(myCharacter.attackLeft().intersects(lizards.get(i).getRectangle())) {
+				kill.restart();
 				lizards.remove(i);
 				GraphicPanel.lizardanimations.remove(i);
 				liveEnemies--;
@@ -482,6 +509,7 @@ public class Game {
 		}
 		for(int i = 0; i<demons.size();++i) {
 			if(myCharacter.attackLeft().intersects(demons.get(i).getRectangle())) {
+				kill.restart();
 				demons.remove(i);
 				GraphicPanel.demonanimations.remove(i);
 				liveEnemies--;
@@ -490,6 +518,7 @@ public class Game {
 		}
 		for(int i = 0; i<meduse.size();++i) {
 			if(myCharacter.attackLeft().intersects(meduse.get(i).getRectangle())) {
+				kill.restart();
 				meduse.remove(i);
 				GraphicPanel.medusaAnimations.remove(i);
 				liveEnemies--;
@@ -497,13 +526,19 @@ public class Game {
 			}
 		}
 		if(dragon.life > 0) {
-			if(myCharacter.attackLeft().intersects(dragon.getRectangle())) {
+			if(myCharacter.attackLeft().intersects(dragon.getRectangle())  && !dragon.invulnerability) {
+				kill.restart();
 				dragon.life--;
 				if(dragon.life == 0) {
 					liveEnemies--;
+					dragonDead.start();
+				}
+				else {
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
 	public ArrayList<Demon> getDemons() {

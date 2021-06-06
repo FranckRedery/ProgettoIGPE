@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import application.GameLoop;
 import application.Main;
 import application.Settings;
+import application.resources.audio.Audio;
 import application.view.GraphicPanel;
 import application.view.MenuPage;
 import application.view.SettingsPage;
@@ -19,6 +20,9 @@ public class MenuPageController implements MouseListener {
 
 	private MenuPage menu = new MenuPage();
 	public static JFrame settingsFrame;
+	private Audio gameBackgroundAudio = new Audio("gameBackgroundAudio.wav");
+	public static Audio click = new Audio("click.wav");
+	public static Audio mouseEntered = new Audio("mouseEntered.wav");
 	
 	public MenuPageController(MenuPage p) {
 		menu = p;
@@ -30,7 +34,8 @@ public class MenuPageController implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getSource() == menu.getPlay()) {
-			
+			click.start();
+			Main.menuAudio.stop();
 			Main.start.dispose();
 			JFrame f = new JFrame("Gioco");
 			f.setSize(Settings.WINDOW_SIZE,Settings.WINDOW_SIZE);		
@@ -45,9 +50,12 @@ public class MenuPageController implements MouseListener {
 			f.setLocationRelativeTo(null);
 			f.setUndecorated(true);
 			f.setVisible(true);
+			gameBackgroundAudio.reduceVolume();
+			gameBackgroundAudio.reduceVolume();
+			gameBackgroundAudio.loop();
 		}
 		else if(e.getSource() == menu.getSettings()) {
-			
+			click.start();
 			Main.start.setVisible(false);
 			settingsFrame = new JFrame("Settings");
 			
@@ -65,6 +73,7 @@ public class MenuPageController implements MouseListener {
 			
 		}
 		else if(e.getSource() == menu.getQuit()) {
+			click.start();
 			System.exit(0);
 		}
 		
@@ -73,12 +82,15 @@ public class MenuPageController implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if(e.getSource() == menu.getPlay()) {
+			mouseEntered.restart();
 			menu.getPlay().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/playMouseEntered.jpg/").getPath()));
 		}
 		else if(e.getSource() == menu.getSettings()) {
+			mouseEntered.restart();
 			menu.getSettings().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/settingsMouseEntered.jpg/").getPath()));
 		}
 		else if(e.getSource() == menu.getQuit()) {
+			mouseEntered.restart();
 			menu.getQuit().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/quitMouseEntered.jpg/").getPath()));
 		}
 		

@@ -6,16 +6,22 @@ import java.awt.event.KeyEvent;
 import application.view.myCharacterAnimations;
 import application.model.Game;
 import application.model.MyCharacter;
+import application.resources.audio.Audio;
 import application.view.CharacterAnimation;
 import application.view.GraphicPanel;
 
 public class AnimationController extends KeyAdapter {
 
 	private GraphicPanel panel;
+	private Audio jump = new Audio("jump.wav");
+	private Audio attack = new Audio("attack.wav");
+	public static long drakeInvuln = 0;
 
 	
 	public AnimationController(GraphicPanel p) {
 		panel = p;
+		jump.reduceVolume();
+		attack.reduceVolume();
 	}
 	
 	@Override
@@ -37,7 +43,7 @@ public class AnimationController extends KeyAdapter {
 			System.exit(0);
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_P && !Game.getInstance().gameOver()) {
+		if(e.getKeyCode() == KeyEvent.VK_P && !Game.getInstance().gameOver() && Game.getInstance().getDragon().life !=  0) {
 			if(Game.getInstance().isPause()) {
 				Game.getInstance().setPause(false);
 			}
@@ -70,6 +76,7 @@ public class AnimationController extends KeyAdapter {
 
 			case KeyEvent.VK_UP:
 				if(!Game.getInstance().isActionInProgress()) {
+					jump.start();
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpUP(true);
 					if(Game.getInstance().getCharacter().right) {
@@ -82,6 +89,7 @@ public class AnimationController extends KeyAdapter {
 				
 			case KeyEvent.VK_D : 
 				if(!Game.getInstance().isActionInProgress()) {
+					jump.start();
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpRight(true);
 					Game.getInstance().getCharacter().right = true;
@@ -91,6 +99,7 @@ public class AnimationController extends KeyAdapter {
 			
 			case KeyEvent.VK_S :
 				if(!Game.getInstance().isActionInProgress()) {
+					jump.start();
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpLeft(true);
 					Game.getInstance().getCharacter().right = false;
@@ -99,17 +108,41 @@ public class AnimationController extends KeyAdapter {
 				break;
 				
 				
-			case KeyEvent.VK_A:
+			case KeyEvent.VK_SPACE:
 				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isActionInProgress()) {
+					attack.start();
 					Game.getInstance().setActionInProgress(true);
 					if(myCharacterAnimations.isRight) {
 						GraphicPanel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
-						Game.getInstance().myCharAttackRight();
+						if(Game.getInstance().myCharAttackRight() && drakeInvuln == 0 && Game.getInstance().getDragon().life != 0) {
+							drakeInvuln = System.nanoTime();
+							Game.getInstance().getDragon().invulnerability = true;
+						}
 					}
 					else {
 						GraphicPanel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
-						Game.getInstance().myCharAttackLeft();
+						if(Game.getInstance().myCharAttackLeft()  && drakeInvuln == 0 && Game.getInstance().getDragon().life != 0) {
+							drakeInvuln = System.nanoTime();
+							Game.getInstance().getDragon().invulnerability = true;
+						}
 					}
+					
+					/*if(drakeInvuln == 0 && Game.getInstance().getDragon().life != 0 && !Game.getInstance().isPause()) {
+					// se il drago vieen attaccato diventa invulnerabile
+					if(Game.getInstance().myCharAttackLeft() || Game.getInstance().myCharAttackRight()) {
+						drakeInvuln = System.nanoTime();
+						Game.getInstance().getDragon().invulnerability = true;
+					}
+				}
+				// passati 2 secondi l'invulnerabilità sparisce 
+				if((System.nanoTime() - drakeInvuln)/1000000000 == 2 && !Game.getInstance().isPause()) {
+					drakeInvuln = 0;
+					Game.getInstance().getDragon().invulnerability = false;
+				}
+				// se si è in pausa e passano i 2 secondi si resetta il timer dell'invulnerabilità 
+				else if(drakeInvuln != 0 && Game.getInstance().isPause()) {
+					drakeInvuln = System.nanoTime();
+				}*/			
 				}
 				break;
 

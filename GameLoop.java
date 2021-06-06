@@ -9,6 +9,7 @@ public class GameLoop extends Thread{
 
 	public AnimationController controller;
 	private long Invulnerability = 0;
+	
 	public GameLoop(AnimationController controller) {
 		this.controller = controller;	
 	}
@@ -33,26 +34,7 @@ public class GameLoop extends Thread{
 				}
 				
 				
-				if(Game.getInstance().getRound() == 5 && Game.getInstance().getLiveEnemies() == 0) {
-					Game.getInstance().spawnDragon();
-				}
-				if(Game.getInstance().getRound() == 5 && Game.getInstance().getLiveEnemies() == 1) {
-					Game.getInstance().spawnSmallDragonLeft(-300);
-					Game.getInstance().spawnSmallDragonRight(1050);
-					Game.getInstance().spawnSmallDragonLeft(-450);
-					Game.getInstance().spawnSmallDragonRight(1250);
-					Game.getInstance().spawnMedusaLeft(-500);
-					Game.getInstance().spawnMedusaRight(1500);
-				}
 				
-				if(Game.getInstance().getDragon().life == 0 && Game.liveEnemies > 0) {
-					for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
-						Game.getInstance().getSmalldragons().remove(i);
-					}
-					if(Game.getInstance().getSmalldragons().size() == 0) {
-						Game.liveEnemies = -1;
-					}
-				}
 				
 				if(Game.getInstance().getRound() == 1) {
 					
@@ -105,8 +87,27 @@ public class GameLoop extends Thread{
 					Game.getInstance().spawnMedusaRight(1500);
 				}
 				
+				if(Game.getInstance().getRound() == 5 && Game.getInstance().getLiveEnemies() == 0) {
+					Game.getInstance().spawnDragon();
+				}
+				if(Game.getInstance().getRound() == 5 && Game.getInstance().getLiveEnemies() == 1) {
+					Game.getInstance().spawnSmallDragonRight(1050);
+					Game.getInstance().spawnSmallDragonLeft(-450);
+				}
 				
-				if(Game.getInstance().getCharacter().life < 5 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
+				if(Game.getInstance().getDragon().life == 0 && Game.liveEnemies > 0) {
+					for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
+						Game.getInstance().getSmalldragons().remove(i);
+					}
+					for(int i = 0; i<Game.getInstance().getMedusa().size();++i) {
+						Game.getInstance().getMedusa().remove(i);
+					}
+					if(Game.getInstance().getSmalldragons().size() == 0 && Game.getInstance().getMedusa().size() == 0) {
+						Game.liveEnemies = -1;
+					}
+				}
+				
+				if(Game.getInstance().getCharacter().life < 5 && !Game.getInstance().gameOver() && !Game.getInstance().isPause() && Game.getInstance().getDragon().life != 0) {
 					Game.getInstance().spawnHeart(Game.getInstance().getRound());
 				}
 				
@@ -122,6 +123,7 @@ public class GameLoop extends Thread{
 					}
 				}
 				
+				
 				if(!Game.getInstance().isPause()) {
 					Game.getInstance().moveFireAttacks();
 				}
@@ -131,6 +133,7 @@ public class GameLoop extends Thread{
 				if(Invulnerability == 0 && !Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
 					// se vengo attaccato divento invulnerabile
 					if(Game.getInstance().myCharAttacked()) {
+						Game.myCharacterHitted.start();
 						Invulnerability = System.nanoTime();
 						Game.getInstance().getCharacter().invulnerability = true;
 					}
@@ -143,10 +146,15 @@ public class GameLoop extends Thread{
 				// se si è in pausa e passano i 2 secondi si resetta il timer dell'invulnerabilità 
 				else if(Invulnerability != 0 && Game.getInstance().isPause()) {
 					Invulnerability = System.nanoTime();
-					System.out.println(Invulnerability);
 				}
 				
-				
+				if((System.nanoTime() - AnimationController.drakeInvuln)/1000000000 == 2 && !Game.getInstance().isPause()) {
+					AnimationController.drakeInvuln = 0;
+					Game.getInstance().getDragon().invulnerability = false;
+				}
+				else if(AnimationController.drakeInvuln != 0 && Game.getInstance().isPause()) {
+					AnimationController.drakeInvuln = System.nanoTime();
+				}
 				
 				
 				controller.update();

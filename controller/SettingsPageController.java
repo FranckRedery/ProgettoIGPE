@@ -22,15 +22,16 @@ public class SettingsPageController implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getSource() == settings.getGoBack()) {
+			MenuPageController.click.start();
 			Main.start.setVisible(true);
 			MenuPageController.settingsFrame.dispose();
 		}
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if(e.getSource() == settings.getGoBack()) {
+			MenuPageController.mouseEntered.start();
 			settings.getGoBack().setIcon(new ImageIcon(getClass().getResource("/application/resources/menu/settings/backMouseEntered.jpg/").getPath()));
 		}
 	}
