@@ -143,7 +143,7 @@ public class GraphicPanel extends JPanel {
 		}
 		
 		// DISEGNO IL BOSS DRAGON
-		if(Game.getInstance().getRound() == 5) {
+		if(Game.getInstance().getRound() == 9) {
 			for(int i = 0; i<Game.getInstance().getDragon().life;++i) {
 				g.setFont(new Font("Fiendish",Font.PLAIN,20));
 				g.setColor(Color.RED);
@@ -225,7 +225,7 @@ public class GraphicPanel extends JPanel {
 				medusaAnimations.get(i).setCurrentAnimation(false);
 			}
 		}
-		if(Game.getInstance().getRound() == 5) {
+		if(Game.getInstance().getRound() == 9) {
 			if(Game.getInstance().getDragon().isRight) {
 				dragonAnimations.setCurrentAnimation(true);
 			}
@@ -249,7 +249,7 @@ public class GraphicPanel extends JPanel {
 			medusaAnimations.get(i).update();
 		}
 		myCharacteranimations.update();
-		if(Game.getInstance().getRound() == 5) {
+		if(Game.getInstance().getRound() == 9) {
 			dragonAnimations.update();
 		}
 		repaint();

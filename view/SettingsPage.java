@@ -23,7 +23,7 @@ public class SettingsPage extends JPanel {
 	public SettingsPage() {
 		
 		try {
-			background = ImageIO.read(new File(getClass().getResource("/application/resources/menu/settings/settingsBackground.jpg/").getPath()));
+			background = ImageIO.read(new File(getClass().getResource("/application/resources/menu/settings/SettingsBg.jpg/").getPath()));
 		} catch (IOException e) {
 			System.out.println("Can't load background image");
 		}
