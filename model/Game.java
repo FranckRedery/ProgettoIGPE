@@ -1,63 +1,60 @@
 package application.model;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
 import application.Settings;
-import application.resources.audio.Audio;
+import application.view.Audio;
 import application.view.DemonAnimations;
-import application.view.DragonAnimations;
 import application.view.GraphicPanel;
 import application.view.MedusaAnimations;
-import application.view.lizardAnimations;
-import application.view.myCharacterAnimations;
-import application.view.smallDragonAnimations;
+import application.view.LizardAnimations;
+import application.view.MyCharacterAnimations;
+import application.view.SmallDragonAnimations;
 
 public class Game {
 
 	private MyCharacter myCharacter;
-	private ArrayList<smallDragon> smalldragons;
-	private ArrayList<lizard> lizards;
+	private ArrayList<SmallDragon> smallDragons;
+	private ArrayList<Lizard> lizards;
 	private ArrayList<Demon> demons;
 	private ArrayList<Medusa> meduse;
-	private ArrayList<fireAttack> fireAttack;
-	private ArrayList<heart> hearts;
+	private ArrayList<FireAttack> fireAttack;
+	private ArrayList<Heart> hearts;
 	private Dragon dragon;
 	private static Game game = null;
-	private boolean JumpRight = false;
-	private boolean JumpLeft = false;
-	private boolean JumpUP = false;
-	private boolean actionInProgress = false;
 	private boolean pause = false;
 	private int kills = 0;
 	private int round = 1;
 	public static int liveEnemies = 0;
 	
-	private Audio heartTaken = new Audio("heartTaken.wav");
+	private Audio heartTaken;
 	private Audio kill = new Audio("kill.wav");
 	private Audio roar = new Audio("roar.wav");
 	private Audio dragonDead = new Audio("dragonDead.wav");
-	private Audio fireAttackAudio = new Audio("fireAttack.wav");
-	public static Audio myCharacterHitted = new Audio("myCharacterHitted.wav");
+	private Audio fireAttackAudio;
+	public static Audio myCharacterHitted;
 
 	
 	private Game() {
 		myCharacter = new MyCharacter();
-		smalldragons = new ArrayList<smallDragon>();
-		lizards = new ArrayList<lizard>();
+		smallDragons = new ArrayList<SmallDragon>();
+		lizards = new ArrayList<Lizard>();
 		demons = new ArrayList<Demon>();
 		meduse = new ArrayList<Medusa>();
-		fireAttack = new ArrayList<fireAttack>();
-		hearts = new ArrayList<heart>();
+		fireAttack = new ArrayList<FireAttack>();
+		hearts = new ArrayList<Heart>();
 		dragon = new Dragon(-300);
-		GraphicPanel.smallDragonanimations = new ArrayList<smallDragonAnimations>();
-		GraphicPanel.lizardanimations = new ArrayList<lizardAnimations>();	
-		GraphicPanel.demonanimations = new ArrayList<DemonAnimations>();
+		GraphicPanel.smallDragonAnimations = new ArrayList<SmallDragonAnimations>();
+		GraphicPanel.lizardAnimations = new ArrayList<LizardAnimations>();	
+		GraphicPanel.demonAnimations = new ArrayList<DemonAnimations>();
 		GraphicPanel.medusaAnimations = new ArrayList<MedusaAnimations>();
 		liveEnemies = 0;
+		myCharacterHitted = new Audio("myCharacterHitted.wav");
 		myCharacterHitted.reduceVolume();
+		heartTaken = new Audio("heartTaken.wav");
 		heartTaken.reduceVolume();
+		fireAttackAudio = new Audio("fireAttack.wav");
 		fireAttackAudio.reduceVolume();
 	}
 	
@@ -76,46 +73,37 @@ public class Game {
 		return myCharacter.life == 0;
 	}
 	
-	public void moveLeft() {
-		myCharacterAnimations.isRight = false;
-		if((myCharacter.x - myCharacter.speed >= 0)) {
-			myCharacter.x -= myCharacter.speed;
-		}
-	}
-	
 	public void spawnSmallDragonLeft(int x) {
-		smallDragonAnimations animazione = new smallDragonAnimations(true);
-		GraphicPanel.smallDragonanimations.add(animazione);
-		smallDragon drake = new smallDragon(true,x);
+		SmallDragonAnimations animazione = new SmallDragonAnimations(true);
+		GraphicPanel.smallDragonAnimations.add(animazione);
+		SmallDragon drake = new SmallDragon(true,x);
 		liveEnemies++;
-		smalldragons.add(drake);
-		GraphicPanel.updateAnimation(-1);
+		smallDragons.add(drake);
 	}
 	
 	public void spawnSmallDragonRight(int x) {
-		smallDragonAnimations animazione = new smallDragonAnimations(false);
-		GraphicPanel.smallDragonanimations.add(animazione);
-		smallDragon drake = new smallDragon(false,x);
+		SmallDragonAnimations animazione = new SmallDragonAnimations(false);
+		GraphicPanel.smallDragonAnimations.add(animazione);
+		SmallDragon drake = new SmallDragon(false,x);
 		liveEnemies++;
-		smalldragons.add(drake);
-		GraphicPanel.updateAnimation(-1);
+		smallDragons.add(drake);
 	}
 	
-	public void smallDragonsmove() {
+	public void smallDragonsMove() {
 		
-		for(int i = 0 ; i< smalldragons.size();++i) {
-			if(myCharacter.x < smalldragons.get(i).x ) {
-				smalldragons.get(i).isRight = false;
+		for(int i = 0 ; i< smallDragons.size();++i) {
+			if(myCharacter.x < smallDragons.get(i).x ) {
+				smallDragons.get(i).isRight = false;
 			}
 			else {
-				smalldragons.get(i).isRight = true;
+				smallDragons.get(i).isRight = true;
 			}
 			
-			if(smalldragons.get(i).isRight) {
-				smalldragons.get(i).x += smalldragons.get(i).speed;
+			if(smallDragons.get(i).isRight) {
+				smallDragons.get(i).x += smallDragons.get(i).speed;
 			}
 			else {
-				smalldragons.get(i).x -= smalldragons.get(i).speed;
+				smallDragons.get(i).x -= smallDragons.get(i).speed;
 			}
 			
 			// durante il movimento voglio che con una percentuale bassa ad ogni passo si generino attacchi
@@ -123,8 +111,8 @@ public class Game {
 			// altrimenti sarebbero troppo difficili da dodgare
 			Random random = new Random();
 			int r = random.nextInt(350);
-			if(r == 1 && Math.abs(smalldragons.get(i).x- myCharacter.x) > 300 && smalldragons.get(i).x > 0 && smalldragons.get(i).x<1000) {
-				fireAttack attacco = new fireAttack(smalldragons.get(i).x ,smalldragons.get(i).isRight);
+			if(r == 1 && Math.abs(smallDragons.get(i).x- myCharacter.x) > 300 && smallDragons.get(i).x > 0 && smallDragons.get(i).x<1000) {
+				FireAttack attacco = new FireAttack(smallDragons.get(i).x ,smallDragons.get(i).isRight);
 				fireAttack.add(attacco);
 				if(Settings.audio) {
 					fireAttackAudio.restart();
@@ -134,23 +122,21 @@ public class Game {
 	}
 	
 	public void spawnLizardLeft(int x) {
-		lizardAnimations animation = new lizardAnimations(true);
+		LizardAnimations animation = new LizardAnimations(true);
 		animation.setCurrentAnimation(true);
-		GraphicPanel.lizardanimations.add(animation);	
-		lizard liz = new lizard(true,x);
+		GraphicPanel.lizardAnimations.add(animation);	
+		Lizard liz = new Lizard(true,x);
 		liveEnemies++;
 		lizards.add(liz);
-		GraphicPanel.updateAnimation(-1);
 	}
 	
 	public void spawnLizardRight(int x) {
-		lizardAnimations animation = new lizardAnimations(false);
+		LizardAnimations animation = new LizardAnimations(false);
 		animation.setCurrentAnimation(false);
-		GraphicPanel.lizardanimations.add(animation);	
-		lizard liz = new lizard(false,x);
+		GraphicPanel.lizardAnimations.add(animation);	
+		Lizard liz = new Lizard(false,x);
 		liveEnemies++;
 		lizards.add(liz);
-		GraphicPanel.updateAnimation(-1);
 	}
 	
 	public void lizardMove() {
@@ -174,21 +160,19 @@ public class Game {
 	public void spawnDemonLeft(int x) {
 		DemonAnimations animation = new DemonAnimations(true);
 		animation.setCurrentAnimation(true);
-		GraphicPanel.demonanimations.add(animation);	
+		GraphicPanel.demonAnimations.add(animation);	
 		Demon demon = new Demon(true,x);
 		liveEnemies++;
 		demons.add(demon);
-		GraphicPanel.updateAnimation(-1);
 	}
 	
 	public void spawnDemonRight(int x) {
 		DemonAnimations animation = new DemonAnimations(false);
 		animation.setCurrentAnimation(false);
-		GraphicPanel.demonanimations.add(animation);	
+		GraphicPanel.demonAnimations.add(animation);	
 		Demon demon = new Demon(false,x);
 		liveEnemies++;
 		demons.add(demon);
-		GraphicPanel.updateAnimation(-1);
 	}
 	
 	public void demonMove() {
@@ -217,7 +201,6 @@ public class Game {
 		Medusa medusa = new Medusa(true,x);
 		liveEnemies++;
 		meduse.add(medusa);
-		GraphicPanel.updateAnimation(-1);
 	}
 	
 	public void spawnMedusaRight(int x) {
@@ -227,12 +210,11 @@ public class Game {
 		Medusa medusa = new Medusa(false,x);
 		liveEnemies++;
 		meduse.add(medusa);
-		GraphicPanel.updateAnimation(-1);
 	}
 	
 	public void medusaMove() {
 		for(int i =0 ; i<meduse.size();++i) {
-			if(!JumpLeft && !JumpRight && !JumpUP) {
+			if(!myCharacter.JumpLeft && !myCharacter.JumpRight && !myCharacter.JumpUP) {
 				if(myCharacter.x < meduse.get(i).x) {
 					meduse.get(i).isRight = false;
 				}
@@ -254,7 +236,6 @@ public class Game {
 		
 		GraphicPanel.dragonAnimations.setCurrentAnimation(true);
 		liveEnemies++;
-		GraphicPanel.updateAnimation(-1);
 		
 	}
 	
@@ -264,6 +245,8 @@ public class Game {
 			return;
 		}
 		
+		// voglio che ci sia una probabilità che il drago effettui una carica di corsa contro il giocatore
+		// solamente se però è ad una certa distanza , altrimenti non sarebbe possibile saltarlo e schivarlo
 		Random rand = new Random();
 		if(rand.nextInt(100) == 1 && !dragon.run && Math.abs(dragon.x - myCharacter.x) > 300) {
 			dragon.run = true;
@@ -274,14 +257,12 @@ public class Game {
 			dragon.speed = 2;
 		}
 		
-		if(!dragon.run && myCharacter.x < dragon.x +100 && !JumpLeft && !JumpRight) {
+		if(!dragon.run && myCharacter.x < dragon.x +100 && !myCharacter.JumpLeft && !myCharacter.JumpRight) {
 			dragon.isRight = false;
-			GraphicPanel.updateAnimation(-1);
 			dragon.x -= dragon.speed;
 		}
-		else if(!dragon.run && myCharacter.x > dragon.x && !JumpLeft && !JumpRight) {
+		else if(!dragon.run && myCharacter.x > dragon.x && !myCharacter.JumpLeft && !myCharacter.JumpRight) {
 			dragon.isRight = true;
-			GraphicPanel.updateAnimation(-1);
 			dragon.x += dragon.speed;
 		}
 		if(dragon.run && dragon.isRight) {
@@ -323,7 +304,7 @@ public class Game {
 		if(random.nextInt(4000) <= round * (5 - myCharacter.life)) {
 			
 			int x = random.nextInt(800) + 100;
-			heart h = new heart(x);
+			Heart h = new Heart(x);
 			hearts.add(h);
 		}
 		
@@ -350,10 +331,16 @@ public class Game {
 		}
 	}
 	
+	public void moveLeft() {
+		MyCharacterAnimations.isRight = false;
+		if((myCharacter.x - myCharacter.speed >= 0)) {
+			myCharacter.x -= myCharacter.speed;
+		}
+	}
 	
 	public void moveRight() {
-		myCharacterAnimations.isRight = true;
-		if((myCharacter.x + myCharacter.speed <= Settings.WINDOW_SIZE - Settings.BLOCK_DIM)) {
+		MyCharacterAnimations.isRight = true;
+		if((myCharacter.x + myCharacter.speed <= Settings.windowSize - Settings.blockDim)) {
 			myCharacter.x += myCharacter.speed;
 		}
 	}
@@ -362,36 +349,36 @@ public class Game {
 		myCharacter.y -= myCharacter.speed*8;
 	}
 	
-	public void jumpDOWN() {
+	public void jumpDown() {
 		myCharacter.y += myCharacter.speed*2;
 	}
 	
-	public void jumpRightUP() {
-		myCharacterAnimations.isRight = true;
-		if((myCharacter.x + myCharacter.speed*2 <= Settings.WINDOW_SIZE - Settings.BLOCK_DIM)) {
+	public void jumpRightUp() {
+		MyCharacterAnimations.isRight = true;
+		if((myCharacter.x + myCharacter.speed*2 <= Settings.windowSize - Settings.blockDim)) {
 			myCharacter.x += myCharacter.speed*2;
 		}
 		myCharacter.y -= myCharacter.speed*4;
 	}
 	
-	public void jumpRightDOWN() {
-		myCharacterAnimations.isRight = true;
-		if((myCharacter.x + myCharacter.speed*2 <= Settings.WINDOW_SIZE - Settings.BLOCK_DIM)) {
+	public void jumpRightDown() {
+		MyCharacterAnimations.isRight = true;
+		if((myCharacter.x + myCharacter.speed*2 <= Settings.windowSize - Settings.blockDim)) {
 			myCharacter.x += myCharacter.speed*2;
 		}
 		myCharacter.y += myCharacter.speed*4;
 	}
 	
-	public void jumpLeftUP() {
-		myCharacterAnimations.isRight = false;
+	public void jumpLeftUp() {
+		MyCharacterAnimations.isRight = false;
 		if((myCharacter.x - myCharacter.speed*2 >= 0)) {
 			myCharacter.x -= myCharacter.speed*2;
 		}
 		myCharacter.y -= myCharacter.speed*4;
 	}
 	
-	public void jumpLeftDOWN() {
-		myCharacterAnimations.isRight = false;
+	public void jumpLeftDown() {
+		MyCharacterAnimations.isRight = false;
 		if((myCharacter.x - myCharacter.speed*2 >= 0)) {
 			myCharacter.x -= myCharacter.speed*2;
 		}
@@ -410,8 +397,8 @@ public class Game {
 					return true;
 				}	
 			}
-		for(int i = 0; i<smalldragons.size();++i) {
-			if(myCharacter.getRectangle().intersects(smalldragons.get(i).getRectangle())) {
+		for(int i = 0; i<smallDragons.size();++i) {
+			if(myCharacter.getRectangle().intersects(smallDragons.get(i).getRectangle())) {
 				myCharacter.life--;
 				return true;
 			}
@@ -447,13 +434,13 @@ public class Game {
 	
 	
 	public boolean myCharAttackRight() {
-		for(int i =0 ; i<smalldragons.size();++i) {
-			if(myCharacter.attackRight().intersects(smalldragons.get(i).getRectangle())) {
+		for(int i =0 ; i<smallDragons.size();++i) {
+			if(myCharacter.attackRight().intersects(smallDragons.get(i).getRectangle())) {
 				if(Settings.audio) {
 					kill.restart();
 				}
-				smalldragons.remove(i);
-				GraphicPanel.smallDragonanimations.remove(i);
+				smallDragons.remove(i);
+				GraphicPanel.smallDragonAnimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -464,7 +451,7 @@ public class Game {
 					kill.restart();
 				}
 				lizards.remove(i);
-				GraphicPanel.lizardanimations.remove(i);
+				GraphicPanel.lizardAnimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -475,7 +462,7 @@ public class Game {
 					kill.restart();
 				}
 				demons.remove(i);
-				GraphicPanel.demonanimations.remove(i);
+				GraphicPanel.demonAnimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -503,6 +490,7 @@ public class Game {
 						dragonDead.start();
 					}
 				}
+				// boolean che serve per capire se il drago è stato attaccato per poi far partire l'invulnerabilità
 				else {
 					return true;
 				}
@@ -512,13 +500,13 @@ public class Game {
 	}
 
 	public boolean myCharAttackLeft() {
-		for(int i = 0; i<smalldragons.size();++i) {
-			if(myCharacter.attackLeft().intersects(smalldragons.get(i).getRectangle())) {
+		for(int i = 0; i<smallDragons.size();++i) {
+			if(myCharacter.attackLeft().intersects(smallDragons.get(i).getRectangle())) {
 				if(Settings.audio) {
 					kill.restart();
 				}
-				smalldragons.remove(i);
-				GraphicPanel.smallDragonanimations.remove(i);
+				smallDragons.remove(i);
+				GraphicPanel.smallDragonAnimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -529,7 +517,7 @@ public class Game {
 					kill.restart();
 				}
 				lizards.remove(i);
-				GraphicPanel.lizardanimations.remove(i);
+				GraphicPanel.lizardAnimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -540,7 +528,7 @@ public class Game {
 					kill.restart();
 				}
 				demons.remove(i);
-				GraphicPanel.demonanimations.remove(i);
+				GraphicPanel.demonAnimations.remove(i);
 				liveEnemies--;
 				kills++;
 			}
@@ -580,46 +568,46 @@ public class Game {
 		return demons;
 	}
 	
-	public ArrayList<heart> getHearts() {
+	public ArrayList<Heart> getHearts() {
 		return hearts;
 	}
 
 	
-	public ArrayList<smallDragon> getSmalldragons() {
-		return smalldragons;
+	public ArrayList<SmallDragon> getSmalldragons() {
+		return smallDragons;
 	}
 
-	public ArrayList<lizard> getLizards() {
+	public ArrayList<Lizard> getLizards() {
 		return lizards;
 	}
 
-	public ArrayList<fireAttack> getFireAttack() {
+	public ArrayList<FireAttack> getFireAttack() {
 		return fireAttack;
 	}
 	
 	
 	public boolean isActionInProgress() {
-		return actionInProgress;
+		return myCharacter.actionInProgress;
 	}
 
 	public void setActionInProgress(boolean inProgress) {
-		this.actionInProgress = inProgress;
+		myCharacter.actionInProgress = inProgress;
 	}
 
 	public boolean isJumpLeft() {
-		return JumpLeft;
+		return myCharacter.JumpLeft;
 	}
 
 	public void setJumpLeft(boolean jumpLeft) {
-		JumpLeft = jumpLeft;
+		myCharacter.JumpLeft = jumpLeft;
 	}
 
 	public boolean isJumpRight() {
-		return JumpRight;
+		return myCharacter.JumpRight;
 	}
 
 	public void setJumpRight(boolean jumpRight) {
-		JumpRight = jumpRight;
+		myCharacter.JumpRight = jumpRight;
 	}
 
 	public int getKills() {
@@ -651,11 +639,11 @@ public class Game {
 	}
 
 	public boolean isJumpUP() {
-		return JumpUP;
+		return myCharacter.JumpUP;
 	}
 
 	public void setJumpUP(boolean jumpUP) {
-		JumpUP = jumpUP;
+		myCharacter.JumpUP = jumpUP;
 	}
 
 	public ArrayList<Medusa> getMedusa() {

@@ -9,7 +9,6 @@ import javax.swing.ImageIcon;
 
 import application.Main;
 import application.Settings;
-import application.view.MenuPage;
 import application.view.SettingsPage;
 
 public class SettingsPageController implements MouseListener, KeyListener {
@@ -18,8 +17,6 @@ public class SettingsPageController implements MouseListener, KeyListener {
 	
 	public SettingsPageController(SettingsPage p) {
 		settings = p;
-		settings.getGoBack().addMouseListener(this);
-		settings.addKeyListener(this);
 	}
 
 	

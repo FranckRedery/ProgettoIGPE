@@ -9,8 +9,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-public class MedusaAnimations {
-
+public class LizardAnimations {
 
 	public static final int WALK_LEFT = 1;
 	public static final int WALK_RIGHT = 2;
@@ -18,10 +17,10 @@ public class MedusaAnimations {
 	private HashMap<Integer, EnemyAnimation> animations;
 	private EnemyAnimation currentAnimation;
 
-	public MedusaAnimations(boolean right) {
+	public LizardAnimations(boolean right) {
 		animations = new HashMap<Integer, EnemyAnimation>();
-		animations.put(WALK_LEFT, new EnemyAnimation(getResources("enemy/medusa/leftWalk")));
-		animations.put(WALK_RIGHT, new EnemyAnimation(getResources("enemy/medusa/rightWalk")));
+		animations.put(WALK_LEFT, new EnemyAnimation(getResources("enemy/lizard/leftWalk")));
+		animations.put(WALK_RIGHT, new EnemyAnimation(getResources("enemy/lizard/rightWalk")));
 		setCurrentAnimation(right);
 	}
 

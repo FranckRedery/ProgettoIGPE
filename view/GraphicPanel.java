@@ -4,40 +4,35 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import application.Settings;
 import application.model.Game;
-import application.model.MyCharacter;
 
 public class GraphicPanel extends JPanel {
 
 	private static final long serialVersionUID = 4467360867545965264L;
-	private static myCharacterAnimations myCharacteranimations = new myCharacterAnimations();
-	public static ArrayList<smallDragonAnimations> smallDragonanimations = new ArrayList<smallDragonAnimations>();
-	public static ArrayList<lizardAnimations> lizardanimations = new ArrayList<lizardAnimations>();
-	public static ArrayList<DemonAnimations> demonanimations = new ArrayList<DemonAnimations>();
+	private static MyCharacterAnimations myCharacterAnimations = new MyCharacterAnimations();
+	public static ArrayList<SmallDragonAnimations> smallDragonAnimations = new ArrayList<SmallDragonAnimations>();
+	public static ArrayList<LizardAnimations> lizardAnimations = new ArrayList<LizardAnimations>();
+	public static ArrayList<DemonAnimations> demonAnimations = new ArrayList<DemonAnimations>();
 	public static ArrayList<MedusaAnimations> medusaAnimations = new ArrayList<MedusaAnimations>();
 	public static DragonAnimations dragonAnimations = new DragonAnimations(true); 
 	private Image heart;
 	private Image floor;
-	private Image Background;
+	private Image background;
 	private Image leftFireAttack;
 	private Image rightFireAttack;
 	private Image tombstone;
 	private Image dragonLife;
+	
+	// contatori che servono per creare l'effetto "lampeggiante" del boss e del personaggio quando sono invulnerabili
 	private int myCharInvulnerabilityFrames = 0;
 	private int drakeInvulnerabilityFrames = 0;
 
@@ -53,7 +48,7 @@ public class GraphicPanel extends JPanel {
 		this.setBackground(Color.black);
 		
 		try {
-			Background = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/gameBackground.jpg"));
+			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/gameBackground.jpg"));
 			floor = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/floor.jpg"));
 			heart = ImageIO.read(getClass().getResourceAsStream("/application/resources/map/heart.png"));
 			leftFireAttack = ImageIO.read(getClass().getResourceAsStream("/application/resources/enemy/smallDragon/leftAttack/attackLeft0.png"));
@@ -68,12 +63,10 @@ public class GraphicPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		
-		// PER OGNI NEMICO O PERSONAGGIO DA INSERIRE VANNO CREATE DUE CLASSI MOLTO SIMILI A CHARACTERANIMATIONS E MYCHARACTERANIMATIONS
-		
 		super.paintComponent(g);
 		
 		//DISEGNO IL BACKGROUND DEL "CIELO" 
-		g.drawImage(Background,0,0,1920,1080,null);
+		g.drawImage(background,0,0,1920,1080,null);
 		
 		// DISEGNO IL PAVIMENTO
 		for(int i = 0 ; i<20;++i) {
@@ -81,65 +74,66 @@ public class GraphicPanel extends JPanel {
 				g.drawImage(floor,i*50,883+j*50,50,50,null);
 			}
 		}
-		// DISEGNO I CUORI
+		
+		// DISEGNO I CUORI CHE RAPPRESENTANO LA VITA DEL PERSONAGGIO
 		for(int i = 0 ; i<Game.getInstance().getCharacter().life;++i) {
 			g.drawImage(heart,50+i*20 ,50 ,20 ,20,null);
 		}
 		
-		//disegno i cuori che spawnano (prendibili)
+		//disegno i cuori che spawnano (bonus prendibili)
 		for(int i = 0; i<Game.getInstance().getHearts().size();++i) {
 			g.drawImage(heart, Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20,null);
-			//g.drawRect(Game.getInstance().getHearts().get(i).x, Game.getInstance().getHearts().get(i).y, 20,20);
 		}
 		
 		if(!Game.getInstance().gameOver()) {
 			// DISEGNO IL MIO PERSONAGGIO, NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO 
-			// IN MODO "LAMPEGGIANTE" COSì CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI QUESTO EFFETTO
+			// IN MODO "LAMPEGGIANTE" COSI' CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI L'INVULNERABILITA'
 			if(Game.getInstance().getCharacter().invulnerability) {
 				if(myCharInvulnerabilityFrames % 2  == 0) {
-					g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+					g.drawImage(myCharacterAnimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.blockDim, Settings.blockDim, null);
 				}
 				myCharInvulnerabilityFrames++;
 			}
 			else {
-				g.drawImage(myCharacteranimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+				g.drawImage(myCharacterAnimations.getCurrentImage(), Game.getInstance().getCharacter().x,Game.getInstance().getCharacter().y , Settings.blockDim, Settings.blockDim, null);
 			}
 		}
 		
-		//DISEGNO LA LAPIDE E LE SCRITTE DI GAMEOVER
+		//DISEGNO LA LAPIDE E LE SCRITTE DI GAMEOVER QUANDO SI PERDE
 		else if(Game.getInstance().gameOver()){
 			g.setFont(new Font("Fiendish",Font.PLAIN,30));
 			g.setColor(Color.RED);
 			g.drawString("You died" , 390, 450);
 			g.setFont(new Font("Fiendish",Font.PLAIN,20));
 			g.drawString("Press R to start a new game or Esc to quit", 180,530);
-			g.drawImage(tombstone,Game.getInstance().getCharacter().x,791,Settings.BLOCK_DIM,Settings.BLOCK_DIM,null);
+			g.drawImage(tombstone,Game.getInstance().getCharacter().x,791,Settings.blockDim,Settings.blockDim,null);
 		}
 		
+		// DISEGNO LA SCRITTA DELLA PAUSA QUANDO IL GIOCO VIENE MESSO IN PAUSA
 		if(Game.getInstance().isPause()) {
 			g.setFont(new Font("Fiendish",Font.PLAIN,30));
 			g.setColor(Color.RED);
 			g.drawString("Game paused" , 360, 450);
 		}
 		
-		// DISEGNO I PRIMI NEMICI (PICCOLI DRAGHI)
+		// DISEGNO I NEMICI PICCOLI DRAGHI
 		for(int i = 0; i<Game.getInstance().getSmalldragons().size();++i) {
-			g.drawImage(smallDragonanimations.get(i).getCurrentImage(),Game.getInstance().getSmalldragons().get(i).x,Game.getInstance().getSmalldragons().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
+			g.drawImage(smallDragonAnimations.get(i).getCurrentImage(),Game.getInstance().getSmalldragons().get(i).x,Game.getInstance().getSmalldragons().get(i).y,Settings.blockDim, Settings.blockDim, null);
 		}
 		
 		// DISEGNO I NEMICI LIZARD
 		for(int i = 0; i<Game.getInstance().getLizards().size();++i) {
-				g.drawImage(lizardanimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
+				g.drawImage(lizardAnimations.get(i).getCurrentImage(),Game.getInstance().getLizards().get(i).x,Game.getInstance().getLizards().get(i).y,Settings.blockDim*2,Settings.blockDim*2,null);
 		}
 		
 		// DISEGNO I NEMICI DEMON
 		for(int i = 0; i<Game.getInstance().getDemons().size();++i) {
-				g.drawImage(demonanimations.get(i).getCurrentImage(),Game.getInstance().getDemons().get(i).x,Game.getInstance().getDemons().get(i).y,Settings.BLOCK_DIM*2,Settings.BLOCK_DIM*2,null);
+				g.drawImage(demonAnimations.get(i).getCurrentImage(),Game.getInstance().getDemons().get(i).x,Game.getInstance().getDemons().get(i).y,Settings.blockDim*2,Settings.blockDim*2,null);
 		}
 		
 		// DISEGNO I NEMICI MEDUSA
 		for(int i = 0; i<Game.getInstance().getMedusa().size();++i) {
-				g.drawImage(medusaAnimations.get(i).getCurrentImage(),Game.getInstance().getMedusa().get(i).x,Game.getInstance().getMedusa().get(i).y,Settings.BLOCK_DIM,Settings.BLOCK_DIM,null);
+				g.drawImage(medusaAnimations.get(i).getCurrentImage(),Game.getInstance().getMedusa().get(i).x,Game.getInstance().getMedusa().get(i).y,Settings.blockDim,Settings.blockDim,null);
 		}
 		
 		// DISEGNO IL BOSS DRAGON
@@ -150,6 +144,9 @@ public class GraphicPanel extends JPanel {
 				g.drawString("Dragon", 840, 100);
 				g.drawImage(dragonLife,780+i*37 ,90 ,70 ,70,null);
 			}
+			
+			// NEL CASO è INVULNERABILE VOGLIO CHE VENGA VISUALIZZATO IN MODO "LAMPEGGIANTE"
+			// COSI' CHE L'UTENTE POSSA RENDERSI MAGGIORMENTE CONTO DI QUANTO DURI L'INVULNERABILITA'
 			if(Game.getInstance().getDragon().invulnerability) {
 				if(drakeInvulnerabilityFrames % 2  == 0) {
 					g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
@@ -159,6 +156,8 @@ public class GraphicPanel extends JPanel {
 			else{
 				g.drawImage(dragonAnimations.getCurrentImage(), Game.getInstance().getDragon().x,  Game.getInstance().getDragon().y, 250, 250 ,null);
 			}
+			
+			//IN CASO VIENE SCONFITTO IL DRAGO SI VINCE 
 			if(Game.getInstance().getDragon().life == 0) {
 				g.setFont(new Font("Fiendish",Font.PLAIN,30));
 				g.setColor(Color.RED);
@@ -171,49 +170,47 @@ public class GraphicPanel extends JPanel {
 		//DISEGNO GLI ATTACCHI DEI PICCOLI DRAGHI
 		for(int i =0 ; i<Game.getInstance().getFireAttack().size();++i) {
 			if(Game.getInstance().getFireAttack().get(i).isRight) {
-				g.drawImage(rightFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				//g.drawRect(Game.getInstance().getFireAttack().get(i).x+45,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
+				g.drawImage(rightFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.blockDim, Settings.blockDim, null);
 			}
 			else {
-				g.drawImage(leftFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.BLOCK_DIM, Settings.BLOCK_DIM, null);
-				//g.drawRect(Game.getInstance().getFireAttack().get(i).x+30,Game.getInstance().getFireAttack().get(i).y+50, 30, 20);
+				g.drawImage(leftFireAttack,Game.getInstance().getFireAttack().get(i).x,Game.getInstance().getFireAttack().get(i).y,Settings.blockDim, Settings.blockDim, null);
 			}
 		}
 		
+		//SCRITTE CHE RAPPRESENTANO LE UCCISIONI , LA VITA ED IL ROUND ATTUALE
 		g.setFont(new Font("Fiendish",Font.PLAIN,20));
 		g.setColor(Color.RED);
-		g.drawString("Kills " + Game.getInstance().getKills() , 430, 40);
+		g.drawString( Game.getInstance().getKills() + " Kills", 430, 40);
 		g.drawString("Health", 50, 40);
 		g.drawString("Round " + Game.getInstance().getRound(),840 , 40);
 		
 	}
 	
 	public static void updateAnimation(int type) {
-		if(type != -1) {
-			myCharacteranimations.changeAnimation(type);
-		}
+		
+		myCharacterAnimations.changeAnimation(type);
 		for(int i = 0 ; i<Game.getInstance().getSmalldragons().size();++i){
 			if(Game.getInstance().getSmalldragons().get(i).isRight) {
-				smallDragonanimations.get(i).setCurrentAnimation(true);
+				smallDragonAnimations.get(i).setCurrentAnimation(true);
 			}
 			else {
-				smallDragonanimations.get(i).setCurrentAnimation(false);
+				smallDragonAnimations.get(i).setCurrentAnimation(false);
 			}
 		}
 		for(int i = 0; i<Game.getInstance().getLizards().size();++i) {
 			if(Game.getInstance().getLizards().get(i).isRight) {
-				lizardanimations.get(i).setCurrentAnimation(true);
+				lizardAnimations.get(i).setCurrentAnimation(true);
 			}
 			else {
-				lizardanimations.get(i).setCurrentAnimation(false);
+				lizardAnimations.get(i).setCurrentAnimation(false);
 			}
 		}
 		for(int i = 0; i<Game.getInstance().getDemons().size();++i) {
 			if(Game.getInstance().getDemons().get(i).isRight) {
-				demonanimations.get(i).setCurrentAnimation(true);
+				demonAnimations.get(i).setCurrentAnimation(true);
 			}
 			else {
-				demonanimations.get(i).setCurrentAnimation(false);
+				demonAnimations.get(i).setCurrentAnimation(false);
 			}
 		}
 		
@@ -236,19 +233,19 @@ public class GraphicPanel extends JPanel {
 	}
 	
 	public void update() {
-		for(int i = 0 ; i<smallDragonanimations.size();++i) {
-			smallDragonanimations.get(i).update();
+		for(int i = 0 ; i<smallDragonAnimations.size();++i) {
+			smallDragonAnimations.get(i).update();
 		}
-		for(int i = 0; i<lizardanimations.size();++i) {
-			lizardanimations.get(i).update();
+		for(int i = 0; i<lizardAnimations.size();++i) {
+			lizardAnimations.get(i).update();
 		}
-		for(int i = 0; i<demonanimations.size();++i) {
-			demonanimations.get(i).update();
+		for(int i = 0; i<demonAnimations.size();++i) {
+			demonAnimations.get(i).update();
 		}
 		for(int i = 0; i<medusaAnimations.size();++i) {
 			medusaAnimations.get(i).update();
 		}
-		myCharacteranimations.update();
+		myCharacterAnimations.update();
 		if(Game.getInstance().getRound() == 9) {
 			dragonAnimations.update();
 		}

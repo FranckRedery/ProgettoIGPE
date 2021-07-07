@@ -25,18 +25,18 @@ public class CharacterAnimation {
 		if(!Game.getInstance().isPause()) {
 			if(Game.getInstance().isJumpRight()) {
 				if(index < 5) {
-					Game.getInstance().jumpRightUP();
+					Game.getInstance().jumpRightUp();
 				}
 				else if(index > 5){
-					Game.getInstance().jumpRightDOWN();
+					Game.getInstance().jumpRightDown();
 				}
 			}
 			if(Game.getInstance().isJumpLeft()) {
 				if(index < 5) {
-					Game.getInstance().jumpLeftUP();
+					Game.getInstance().jumpLeftUp();
 				}
 				else if(index > 5){
-					Game.getInstance().jumpLeftDOWN();
+					Game.getInstance().jumpLeftDown();
 				}	
 			}
 			if(Game.getInstance().isJumpUP()) {
@@ -44,7 +44,7 @@ public class CharacterAnimation {
 					Game.getInstance().jumpUP();
 				}
 				else if(index > 2){
-					Game.getInstance().jumpDOWN();
+					Game.getInstance().jumpDown();
 				}
 			}
 			index++;

@@ -45,6 +45,7 @@ public class DragonAnimations {
 		
 	}
 
+	// in base alla boolean con cui viene inizializzato si setta l'animazione , cammina dx oppure sx , morte dx oppure sx
 	public void setCurrentAnimation(boolean right) {
 		
 		if(Game.getInstance().getDragon().life == 0 && right) {

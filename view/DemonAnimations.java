@@ -38,7 +38,8 @@ public class DemonAnimations {
 		}
 		
 	}
-
+	
+	// in base alla boolean con cui viene inizializzato si setta l'animazione , cammina dx oppure sx
 	public void setCurrentAnimation(boolean right) {
 		if(right) {
 			currentAnimation = animations.get(WALK_RIGHT);

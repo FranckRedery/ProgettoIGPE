@@ -3,13 +3,12 @@ package application.controller;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import application.view.myCharacterAnimations;
-import application.Main;
+import javax.swing.JOptionPane;
+
+import application.view.MyCharacterAnimations;
 import application.Settings;
 import application.model.Game;
-import application.model.MyCharacter;
-import application.resources.audio.Audio;
-import application.view.CharacterAnimation;
+import application.view.Audio;
 import application.view.GraphicPanel;
 
 public class AnimationController extends KeyAdapter {
@@ -29,20 +28,21 @@ public class AnimationController extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
-		if(Game.getInstance().gameOver() && e.getKeyCode() == KeyEvent.VK_R) {
-			Game.restartGame();
-			panel.repaint();
-			return;
-		}
-		
-		if(Game.getInstance().getDragon().life == 0 && e.getKeyCode() == KeyEvent.VK_R) {
+		if((Game.getInstance().gameOver() || Game.getInstance().getDragon().life == 0)  && e.getKeyCode() == KeyEvent.VK_R) {
 			Game.restartGame();
 			panel.repaint();
 			return;
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			System.exit(0);
+			Game.getInstance().setPause(true);
+			
+			int confirm = JOptionPane.showConfirmDialog(panel, "Are you sure you want to quit ?", "", JOptionPane.YES_NO_OPTION);
+
+			if(confirm == JOptionPane.YES_OPTION) {
+				System.exit(0);
+			}
+			Game.getInstance().setPause(false);
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_P && !Game.getInstance().gameOver() && Game.getInstance().getDragon().life !=  0) {
@@ -67,23 +67,24 @@ public class AnimationController extends KeyAdapter {
 		}
 		
 		if(!Game.getInstance().gameOver() && !Game.getInstance().isPause()) {
+			
 			switch (e.getKeyCode()) {
 			
 			case KeyEvent.VK_LEFT:
-					if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() ) {
+					if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isJumpUP()) {
 						Game.getInstance().setActionInProgress(true);
 						Game.getInstance().moveLeft();
 						Game.getInstance().getCharacter().right = false;
-						GraphicPanel.updateAnimation(myCharacterAnimations.WALK_LEFT);
+						GraphicPanel.updateAnimation(MyCharacterAnimations.WALK_LEFT);
 					}			
 				break;
 
 			case KeyEvent.VK_RIGHT:
-				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight()) {
+				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isJumpUP()) {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().moveRight();
 					Game.getInstance().getCharacter().right = true;
-					GraphicPanel.updateAnimation(myCharacterAnimations.WALK_RIGHT);
+					GraphicPanel.updateAnimation(MyCharacterAnimations.WALK_RIGHT);
 				}		
 				break;
 
@@ -95,10 +96,10 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpUP(true);
 					if(Game.getInstance().getCharacter().right) {
-						GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
+						GraphicPanel.updateAnimation(MyCharacterAnimations.JUMP_RIGHT);
 					}
 					else {
-						GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
+						GraphicPanel.updateAnimation(MyCharacterAnimations.JUMP_LEFT);
 					}
 				}		
 				
@@ -110,7 +111,7 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpRight(true);
 					Game.getInstance().getCharacter().right = true;
-					GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_RIGHT);
+					GraphicPanel.updateAnimation(MyCharacterAnimations.JUMP_RIGHT);
 				}
 				break;
 			
@@ -122,26 +123,30 @@ public class AnimationController extends KeyAdapter {
 					Game.getInstance().setActionInProgress(true);
 					Game.getInstance().setJumpLeft(true);
 					Game.getInstance().getCharacter().right = false;
-					GraphicPanel.updateAnimation(myCharacterAnimations.JUMP_LEFT);
+					GraphicPanel.updateAnimation(MyCharacterAnimations.JUMP_LEFT);
 				}
 				break;
 				
 				
 			case KeyEvent.VK_SPACE:
-				if(!Game.getInstance().isJumpLeft() && !Game.getInstance().isJumpRight() && !Game.getInstance().isActionInProgress()) {
+				if(!Game.getInstance().isActionInProgress()) {
 					if(Settings.audio) {
 						attack.start();
 					}
 					Game.getInstance().setActionInProgress(true);
-					if(myCharacterAnimations.isRight) {
-						GraphicPanel.updateAnimation(myCharacterAnimations.ATTACK_RIGHT);
+					if(MyCharacterAnimations.isRight) {
+						GraphicPanel.updateAnimation(MyCharacterAnimations.ATTACK_RIGHT);
+						
+						// se attacco il drago faccio partire la sua invulnerabilità 
 						if(Game.getInstance().myCharAttackRight() && drakeInvuln == 0 && Game.getInstance().getDragon().life != 0) {
 							drakeInvuln = System.nanoTime();
 							Game.getInstance().getDragon().invulnerability = true;
 						}
 					}
 					else {
-						GraphicPanel.updateAnimation(myCharacterAnimations.ATTACK_LEFT);
+						GraphicPanel.updateAnimation(MyCharacterAnimations.ATTACK_LEFT);
+						
+						// se attacco il drago faccio partire la sua invulnerabilità 
 						if(Game.getInstance().myCharAttackLeft()  && drakeInvuln == 0 && Game.getInstance().getDragon().life != 0) {
 							drakeInvuln = System.nanoTime();
 							Game.getInstance().getDragon().invulnerability = true;
@@ -151,11 +156,11 @@ public class AnimationController extends KeyAdapter {
 				break;
 
 			default:
-				if(myCharacterAnimations.isRight) {
-					GraphicPanel.updateAnimation(myCharacterAnimations.IDLE_RIGHT);
+				if(MyCharacterAnimations.isRight) {
+					GraphicPanel.updateAnimation(MyCharacterAnimations.IDLE_RIGHT);
 				}
 				else {
-					GraphicPanel.updateAnimation(myCharacterAnimations.IDLE_LEFT);
+					GraphicPanel.updateAnimation(MyCharacterAnimations.IDLE_LEFT);
 				}
 				break;
 			}

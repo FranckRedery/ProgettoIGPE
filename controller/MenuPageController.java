@@ -5,16 +5,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import application.GameLoop;
 import application.Main;
 import application.Settings;
-import application.model.Game;
-import application.resources.audio.Audio;
+import application.view.Audio;
 import application.view.GraphicPanel;
 import application.view.MenuPage;
 import application.view.SettingsPage;
@@ -30,10 +28,6 @@ public class MenuPageController implements MouseListener, KeyListener {
 	
 	public MenuPageController(MenuPage p) {
 		menu = p;
-		menu.getPlay().addMouseListener(this);
-		menu.getSettings().addMouseListener(this);
-		menu.getQuit().addMouseListener(this);
-		menu.addKeyListener(this);
 	}
 
 	@Override
@@ -45,7 +39,7 @@ public class MenuPageController implements MouseListener, KeyListener {
 			Main.menuAudio.stop();
 			Main.start.dispose();
 			gioco = new JFrame("Gioco");
-			gioco.setSize(Settings.WINDOW_SIZE,Settings.WINDOW_SIZE);		
+			gioco.setSize(Settings.windowSize,Settings.windowSize);		
 			GraphicPanel gp = new GraphicPanel();
 			AnimationController controller = new AnimationController(gp);
 			gp.addKeyListener(controller);
@@ -70,14 +64,16 @@ public class MenuPageController implements MouseListener, KeyListener {
 			
 			SettingsPage settingsPage = new SettingsPage();
 			SettingsPageController control = new SettingsPageController(settingsPage);
-			settingsPage.addMouseListener(control);
+			settingsPage.getGoBack().addMouseListener(control);
+			settingsPage.addKeyListener(control);
 			settingsPage.setFocusable(true);
 			
 			settingsFrame.add(settingsPage);
-			settingsFrame.setSize(Settings.WINDOW_SIZE,Settings.WINDOW_SIZE);
+			settingsFrame.setSize(Settings.windowSize,Settings.windowSize);
 			settingsFrame.setLocationRelativeTo(null);
 			settingsFrame.setUndecorated(true);
 			settingsFrame.setVisible(true);
+			settingsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 			
 		}
@@ -85,7 +81,12 @@ public class MenuPageController implements MouseListener, KeyListener {
 			if(Settings.audio) {
 				click.start();
 			}
-			System.exit(0);
+			
+			int confirm = JOptionPane.showConfirmDialog(gioco, "Are you sure you want to quit ?", "",JOptionPane.YES_NO_OPTION);
+			
+			if(confirm == JOptionPane.YES_OPTION) {
+				System.exit(0);
+			}
 		}
 		
 	}

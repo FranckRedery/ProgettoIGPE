@@ -2,8 +2,6 @@ package application.model;
 
 import java.awt.Rectangle;
 
-import application.Settings;
-
 public class MyCharacter {
 
 	public  int x;
@@ -12,7 +10,10 @@ public class MyCharacter {
 	public  int life;
 	public boolean invulnerability = false;
 	public boolean right = true;
-
+	public boolean JumpRight = false;
+	public boolean JumpLeft = false;
+	public boolean JumpUP = false;
+	public boolean actionInProgress = false;
 
 	public MyCharacter() {
 		x = 400;
